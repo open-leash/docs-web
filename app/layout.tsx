@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./styles.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://docs.openleash.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:9306";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
     default: "OpenLeash Docs",
     template: "%s - OpenLeash Docs"
   },
-  description: "Install, configure, and operate OpenLeash for AI coding agents.",
+  description: "Install, configure, and operate OpenLeash for AI agents.",
   openGraph: {
     title: "OpenLeash Docs",
-    description: "Documentation for the open-source control plane for AI coding agents.",
+    description: "Documentation for the open-source control plane for AI agents.",
     url: siteUrl,
     siteName: "OpenLeash Docs",
     type: "website"

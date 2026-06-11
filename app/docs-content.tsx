@@ -18,9 +18,7 @@ import {
   ListChecks,
   LockKeyhole,
   MonitorDown,
-  Network,
   ScrollText,
-  ServerCog,
   ShieldAlert,
   ShieldCheck,
   Smartphone,
@@ -51,33 +49,40 @@ export const navGroups: NavGroup[] = [
     title: "Start",
     items: [
       { href: "/", label: "What Is OpenLeash?" },
-      { href: "/getting-started", label: "Choose Your Setup" },
+      { href: "/getting-started", label: "Pick Your Path" },
+      { href: "/getting-started/individual", label: "I'm an Individual" },
+      { href: "/getting-started/organization", label: "I'm an Organization" },
       { href: "/getting-started/local-mode", label: "Local Mode" },
-      { href: "/getting-started/personal-cloud", label: "Personal Cloud" },
-      { href: "/getting-started/team-cloud", label: "Team Cloud" },
+      { href: "/getting-started/openleash-cloud", label: "OpenLeash Cloud" },
       { href: "/getting-started/private-cloud", label: "Private Cloud" }
     ]
   },
   {
-    title: "Features",
+    title: "Clients",
     items: [
-      { href: "/features/desktop-client", label: "Desktop Client" },
-      { href: "/features/approvals", label: "Approvals" },
-      { href: "/features/policies", label: "Policies" },
-      { href: "/features/secret-protection", label: "Secret Protection" },
-      { href: "/features/prompt-compression", label: "Prompt Compression" },
-      { href: "/features/identity", label: "Identity & Users" },
-      { href: "/features/audit-log", label: "Audit Log" },
-      { href: "/features/usage", label: "Provider Usage" },
-      { href: "/features/mobile", label: "Mobile Companion" }
+      { href: "/clients/desktop-client", label: "Desktop Client" },
+      { href: "/clients/mobile-client", label: "Mobile Client" },
+      { href: "/clients/dashboard", label: "Dashboard for CISOs" }
     ]
   },
   {
-    title: "Deploy",
+    title: "Protections",
     items: [
-      { href: "/deployment/openleash-cloud", label: "OpenLeash Cloud" },
-      { href: "/deployment/private-cloud", label: "Private Cloud" },
-      { href: "/deployment/self-hosted", label: "Self-Hosted" }
+      { href: "/features/action-protection", label: "Action Protection" },
+      { href: "/features/secret-protection", label: "Secret Protection" },
+      { href: "/features/policies", label: "Policies" },
+      { href: "/features/prompt-compression", label: "Prompt Compression" }
+    ]
+  },
+  {
+    title: "Admin & Deploy",
+    items: [
+      { href: "/features/identity", label: "Identity & Users" },
+      { href: "/features/audit-log", label: "Audit Log" },
+      { href: "/features/usage", label: "Provider Usage" },
+      { href: "/deployment/openleash-cloud", label: "Cloud Rollout" },
+      { href: "/deployment/private-cloud", label: "Private Cloud Rollout" },
+      { href: "/deployment/self-hosted", label: "Self-Hosted Ops" }
     ]
   },
   {
@@ -95,34 +100,53 @@ const setupCards = [
   {
     href: "/getting-started/local-mode",
     icon: Laptop,
-    label: "Solo Dev",
-    title: "Fully Local",
-    copy: "The desktop app runs on one computer, hooks call the local API, and no account or dashboard is required.",
-    bullets: ["No cloud dependency", "Optional local LLM key", "Works offline"]
+    label: "Individual",
+    title: "Local Mode",
+    copy: "I want protection on my own machine, no account, no dashboard.",
+    bullets: ["Works offline", "Desktop client only", "Optional local model key"]
   },
   {
-    href: "/getting-started/personal-cloud",
+    href: "/getting-started/openleash-cloud",
     icon: Cloud,
-    label: "Solo Dev",
+    label: "Individual",
     title: "OpenLeash Cloud",
-    copy: "Personal hosted account sync and cloud coverage without sending solo users into the admin dashboard.",
-    bullets: ["Sign up where you started", "Install desktop client", "Dashboard never appears"]
+    copy: "I want a hosted account for myself, but I am not managing a company.",
+    bullets: ["Sign up in place", "Install desktop client", "No dashboard"]
   },
   {
-    href: "/getting-started/team-cloud",
+    href: "/getting-started/openleash-cloud#org",
     icon: Building2,
-    label: "Org Admin",
-    title: "Team Cloud",
-    copy: "OpenLeash-hosted APIs and dashboard for companies that want managed identity, policy, audit, and deployment.",
-    bullets: ["Work identity first", "Dashboard onboarding", "Managed team rollout"]
+    label: "Organization",
+    title: "OpenLeash Cloud",
+    copy: "We want OpenLeash hosted for our company, with policy and audit.",
+    bullets: ["Work identity", "CISO dashboard", "Managed rollout"]
   },
   {
     href: "/getting-started/private-cloud",
     icon: LockKeyhole,
-    label: "Org Admin",
+    label: "Organization",
     title: "Private Cloud",
-    copy: "Customer-hosted APIs, dashboard, database, and identity configuration in a private cloud or on-prem environment.",
-    bullets: ["Customer Postgres", "Customer identity provider", "Open-source core"]
+    copy: "We need to host the APIs, dashboard, database, and identity ourselves.",
+    bullets: ["Customer Postgres", "Customer IdP", "Open-source core"]
+  }
+];
+
+const audienceCards = [
+  {
+    href: "/getting-started/individual",
+    icon: Laptop,
+    label: "Individual",
+    title: "I'm protecting my own agents",
+    copy: "Start with the desktop client. Pick Local Mode for no cloud, or OpenLeash Cloud for a personal hosted account.",
+    bullets: ["No company setup", "No CISO dashboard", "Local or personal cloud"]
+  },
+  {
+    href: "/getting-started/organization",
+    icon: Building2,
+    label: "Organization",
+    title: "We're rolling this out for a team",
+    copy: "Start with identity, policy, approvals, audit, and client rollout. Choose hosted or customer-hosted.",
+    bullets: ["Identity and users", "Dashboard for admins", "Cloud or Private Cloud"]
   }
 ];
 
@@ -171,28 +195,28 @@ export function HomePage() {
     <DocsLayout activePath="/">
       <Hero
         eyebrow="Start here"
-        title="Understand OpenLeash before you install it."
-        description="OpenLeash is a control plane for AI coding agents. It watches the risky moments, applies policy, asks for approval when judgment is needed, and keeps an audit trail for individuals and teams."
+        title="AI agents move fast. OpenLeash adds judgment."
+        description="OpenLeash sits beside your agents and watches the moments that matter: secrets, shell commands, file access, deploys, and other risky actions. You start simple, then add cloud, teams, identity, and audit only when you need them 🙂"
         primary={{ href: "/getting-started", label: "Choose your setup" }}
       />
 
       <section className="section">
-        <SectionTitle title="What OpenLeash Does" text="AI agents can read files, run commands, edit code, call tools, and push changes. OpenLeash gives those actions a review layer without forcing developers through a proxy." />
+        <SectionTitle title="The Plain Version" text="Your agent asks to do something. OpenLeash checks the risk. Safe work continues; sensitive work gets blocked, masked, or sent for approval." />
         <div className="featureGrid">
-          <Mini icon={<ShieldCheck />} title="Protect risky actions" text="Hold or block shell commands, destructive infrastructure changes, secret access, sensitive file reads, force pushes, and production deploys." />
-          <Mini icon={<Bell />} title="Ask at the right time" text="Let normal work continue while pausing the moments that need a developer, admin, or security reviewer to decide." />
-          <Mini icon={<ScrollText />} title="Keep evidence" text="Record the agent, user, project, action, decision, and policy context so security teams can understand what happened later." />
+          <Mini icon={<ShieldCheck />} title="Protect actions" text="Hold destructive commands, production deploys, force pushes, and sensitive file reads." />
+          <Mini icon={<KeyRound />} title="Protect secrets" text="Catch keys, tokens, .env files, kubeconfigs, and other sensitive context before they leak." />
+          <Mini icon={<ScrollText />} title="Remember what happened" text="Keep a readable trail of the agent, user, action, decision, and reason." />
         </div>
       </section>
 
       <section className="section">
-        <SectionTitle title="Four Real User Journeys" text="OpenLeash is not one install path. Pick the path that matches who you are and where policy should live." />
+        <SectionTitle title="Start From Who You Are" text="No maze. Pick the card that sounds like you." />
         <SetupGrid />
       </section>
 
       <section className="section split">
         <div>
-          <SectionTitle title="The Core Runtime" text="Hooks always talk to the desktop local API first. Local mode can stay fully local; managed modes can forward to a cloud or private API when available." />
+          <SectionTitle title="One Idea To Remember" text="Hooks call the desktop client first. That keeps Local mode local, and lets cloud modes keep working through the same client." />
           <CodeBlock>{`Installed hooks -> Desktop local API
 http://127.0.0.1:9317/v1/hooks/:agent/:event
 
@@ -212,20 +236,98 @@ export const pages: Record<string, DocPage> = {
   "getting-started": {
     slug: "getting-started",
     eyebrow: "Getting started",
-    title: "Choose the right setup before typing commands.",
-    description: "The fastest way to succeed with OpenLeash is to start from the correct product path. Solo local, solo cloud, team cloud, and private cloud have different onboarding surfaces.",
+    title: "First, tell us who you are.",
+    description: "The docs get easier when the path starts with you. Individuals get a short setup. Organizations get identity, policy, audit, and rollout guidance.",
     body: (
       <>
         <section className="section first">
+          <JourneyStrip steps={["Pick audience", "Pick mode", "Install client", "Configure protections"]} active={0} />
+          <AudienceGrid />
+        </section>
+        <section className="section">
+          <SectionTitle title="Already Know The Mode?" text="OpenLeash has three modes: Local Mode, OpenLeash Cloud, and Private Cloud." />
           <SetupGrid />
         </section>
         <section className="section">
-          <SectionTitle title="Decision Guide" text="Use this when you are unsure which flow applies." />
+          <SectionTitle title="Quick Decision" text="Read this like a normal person in a hurry." />
           <DecisionTable rows={[
-            ["I want everything on my laptop", "Local mode", "No account, no dashboard, optional local LLM key."],
-            ["I am one person but want hosted sync", "Personal cloud", "Sign up in web/desktop/mobile; install desktop after sign-up."],
-            ["I manage a company rollout", "Team cloud", "Use work identity, then finish onboarding in the dashboard."],
-            ["My customer must host everything", "Private Cloud", "Deploy client-api, dashboard-api, dashboard-web, Postgres, and identity config."]
+            ["Just me, no cloud", "Local Mode", "Install the desktop client. No account. No dashboard."],
+            ["Just me, with sync", "OpenLeash Cloud", "Create a personal account where you started. Still no dashboard."],
+            ["My company", "OpenLeash Cloud", "Use work identity, then configure users and policy in the dashboard."],
+            ["My company hosts it", "Private Cloud", "Run the public core in your own environment."]
+          ]} />
+        </section>
+        <section className="section">
+          <SectionTitle title="Next Step" text="Choose the full journey that matches you." />
+          <NextStepCards cards={[
+            ["I'm an individual", "/getting-started/individual", "Install desktop, choose Local Mode or personal cloud, and protect your own agents."],
+            ["I'm an organization", "/getting-started/organization", "Connect identity, configure policy, and roll OpenLeash out to your team."]
+          ]} />
+        </section>
+      </>
+    )
+  },
+  "getting-started/individual": {
+    slug: "getting-started/individual",
+    eyebrow: "Individual",
+    title: "You want protection without admin homework.",
+    description: "Start with the desktop client. Choose Local Mode if you want everything on your machine, or OpenLeash Cloud if you want a personal hosted account.",
+    body: (
+      <>
+        <section className="section first split">
+          <div>
+            <JourneyStrip steps={["Install desktop", "Choose mode", "Install hooks", "Done"]} active={0} />
+            <SectionTitle title="Your Simple Path" text="You are not setting policy for a company. You are protecting your own agents." />
+            <StepList steps={[
+              "Install the desktop client.",
+              "Choose Individual.",
+              "Pick Local Mode or OpenLeash Cloud.",
+              "Install hooks for the agents you use.",
+              "Keep working. OpenLeash interrupts only the risky stuff."
+            ]} />
+          </div>
+          <DesktopScreenshot />
+        </section>
+        <section className="section">
+          <Notice title="Tiny but important" text="Solo OpenLeash Cloud users never go to the dashboard. That surface is for organization admins and security teams." />
+        </section>
+        <section className="section">
+          <SectionTitle title="Pick Your Individual Mode" text="Both paths start in the desktop client. Pick the one that fits how you want OpenLeash to run." />
+          <NextStepCards cards={[
+            ["Local Mode", "/getting-started/local-mode", "No account, no hosted API, no dashboard. Everything starts and stays on your computer."],
+            ["OpenLeash Cloud", "/getting-started/openleash-cloud", "Personal hosted account and sync, while still keeping solo users out of the dashboard."]
+          ]} />
+        </section>
+      </>
+    )
+  },
+  "getting-started/organization": {
+    slug: "getting-started/organization",
+    eyebrow: "Organization",
+    title: "You want policy, users, approvals, and proof.",
+    description: "Organizations use OpenLeash Cloud when OpenLeash hosts it, or Private Cloud when the customer hosts the stack.",
+    body: (
+      <>
+        <section className="section first split">
+          <div>
+            <JourneyStrip steps={["Choose hosting", "Configure dashboard", "Deploy clients", "Operate"]} active={0} />
+            <SectionTitle title="Admin Path" text="First connect identity. Then set policy. Then roll clients out." />
+            <StepList steps={[
+              "Choose OpenLeash Cloud or Private Cloud.",
+              "Open the dashboard as an admin or CISO.",
+              "Connect your identity provider.",
+              "Set action and secret protection policies.",
+              "Deploy the desktop client to employees.",
+              "Use audit logs when you need answers."
+            ]} />
+          </div>
+          <DashboardScreenshot />
+        </section>
+        <section className="section">
+          <SectionTitle title="Choose Your Organization Path" text="The dashboard journey is the same shape; the hosting responsibility changes." />
+          <NextStepCards cards={[
+            ["OpenLeash Cloud rollout", "/deployment/openleash-cloud", "Hosted OpenLeash: sign in with work identity, configure the dashboard, deploy clients."],
+            ["Private Cloud rollout", "/getting-started/private-cloud", "Customer-hosted OpenLeash: bootstrap the dashboard, connect identity, then enroll clients."]
           ]} />
         </section>
       </>
@@ -233,27 +335,28 @@ export const pages: Record<string, DocPage> = {
   },
   "getting-started/local-mode": {
     slug: "getting-started/local-mode",
-    eyebrow: "Solo Dev",
-    title: "Install OpenLeash in Local mode.",
-    description: "Local mode is for one developer who wants protection without an account, hosted API, dashboard, or internet dependency.",
+    eyebrow: "Local Mode",
+    title: "One computer. No cloud required.",
+    description: "Local Mode is for an individual who wants protection with no account, no hosted API, no dashboard, and no internet dependency.",
     body: (
       <>
         <section className="section first split">
           <div>
-            <SectionTitle title="What Happens" text="The desktop client initializes local storage, starts a local API, installs hooks, and evaluates actions locally." />
+            <JourneyStrip steps={["Install desktop", "Choose Local Mode", "Add optional key", "Install hooks", "Protected"]} active={1} />
+            <SectionTitle title="What Happens" text="The desktop client starts a local API and installs hooks. Agent events stay on your machine first." />
             <StepList steps={[
-              "Download and install OpenLeash Desktop.",
+              "Install the desktop client.",
               "Choose Individual.",
-              "Choose Local mode.",
-              "Optionally paste your own OpenAI, Claude, Gemini, DeepSeek, or compatible LLM key.",
-              "Install hooks for the local agents you use.",
-              "Keep coding. The hook calls stay on 127.0.0.1 first."
+              "Choose Local Mode.",
+              "Optionally add your own model key.",
+              "Install agent hooks.",
+              "Keep coding."
             ]} />
           </div>
           <DesktopScreenshot />
         </section>
         <section className="section">
-          <SectionTitle title="LLM Keys In Local Mode" text="A model key is optional. If you add one, it is used for richer security evaluations. If you do not, deterministic fallback rules still protect obvious risky actions." />
+          <SectionTitle title="Model Keys" text="A model key is optional. Add one for richer checks; skip it for deterministic local rules." />
           <CodeBlock>{`Desktop settings:
 Provider: OpenAI / Claude / Gemini / DeepSeek compatible
 API key: stored by the desktop client
@@ -262,177 +365,212 @@ Hooks call:
 http://127.0.0.1:9317/v1/hooks/:agent/:event`}</CodeBlock>
         </section>
         <section className="section">
-          <SectionTitle title="What You Do Not Need" text="Local mode intentionally avoids the operational pieces required by team deployments." />
+          <SectionTitle title="What You Do Not Need" text="This is the lightest path." />
           <Checklist items={["No OpenLeash account", "No dashboard", "No Postgres", "No Docker", "No Cloud Run", "No identity provider"]} />
+        </section>
+        <section className="section">
+          <SectionTitle title="Finish Line" text="You are done when the desktop client is running, hooks are installed, and the local API is listening." />
+          <NextStepCards cards={[
+            ["Understand the desktop client", "/clients/desktop-client", "See what the tray app owns and how hooks reach it."],
+            ["Troubleshooting", "/reference/troubleshooting", "Use this if hooks are not firing or the local API is not reachable."]
+          ]} />
         </section>
       </>
     )
   },
-  "getting-started/personal-cloud": {
-    slug: "getting-started/personal-cloud",
-    eyebrow: "Solo Dev",
-    title: "Use OpenLeash Cloud as a personal user.",
-    description: "Personal cloud is hosted, but it is not the admin dashboard path. Solo users complete account creation where they start and then install the desktop client.",
+  "getting-started/openleash-cloud": {
+    slug: "getting-started/openleash-cloud",
+    eyebrow: "OpenLeash Cloud",
+    title: "Hosted OpenLeash, two very different journeys.",
+    description: "Individuals use OpenLeash Cloud without the dashboard. Organizations use the dashboard for identity, policy, deployment, and audit.",
     body: (
       <>
         <section className="section first split alt">
           <PersonalCloudScreenshot />
           <div>
-            <SectionTitle title="The Rule" text="Solo developers never see the dashboard. The website, desktop app, or mobile app can start sign-up, but the flow finishes in that same surface." />
+            <JourneyStrip steps={["Sign up", "Install desktop", "Install hooks", "Protected"]} active={0} />
+            <SectionTitle title="If It Is Just You" text="Sign up where you started. Then install the desktop client. That is it." />
             <StepList steps={[
-              "Start from the website, desktop client, or mobile app.",
-              "Sign up with Google, GitHub, or email when enabled.",
-              "Finish account creation in the same surface.",
-              "Install the desktop client when prompted.",
-              "The desktop local API forwards to OpenLeash Cloud only when configured and reachable."
+              "Start from web, desktop, or mobile.",
+              "Create your personal account.",
+              "Install the desktop client.",
+              "The desktop client forwards to OpenLeash Cloud when online."
             ]} />
           </div>
         </section>
-        <section className="section">
-          <Notice title="Do not send personal users to /dashboard" text="If a solo public-cloud flow opens the dashboard, the product flow is wrong. The dashboard is for organization admins and CISOs." />
-        </section>
-      </>
-    )
-  },
-  "getting-started/team-cloud": {
-    slug: "getting-started/team-cloud",
-    eyebrow: "Org Admin",
-    title: "Set up OpenLeash Cloud for a team.",
-    description: "Team cloud is the managed SaaS path for organization admins. It uses the hosted dashboard for identity, users, policies, audit, usage, and deployment.",
-    body: (
-      <>
-        <section className="section first split">
+        <section className="section split" id="org">
           <div>
-            <SectionTitle title="Admin Journey" text="A company setup starts with work identity and finishes in the dashboard." />
+            <JourneyStrip steps={["Work sign-in", "Dashboard setup", "Policies", "Client rollout"]} active={1} />
+            <SectionTitle title="If It Is Your Company" text="Use work identity and finish setup in the dashboard." />
             <StepList steps={[
-              "Sign up with a work Google Workspace or Microsoft 365 / Entra ID account.",
-              "OpenLeash derives or finds the organization workspace from the verified domain.",
-              "Continue onboarding in the dashboard.",
-              "Connect identity: Google Workspace, Okta, Microsoft Entra ID, Ping, or LDAP-style sync.",
-              "Configure policies and rollout rules.",
-              "Distribute the desktop client to employees."
+              "Sign in with work identity.",
+              "Create or join the organization.",
+              "Connect identity and groups.",
+              "Set policies and approval routes.",
+              "Deploy desktop and mobile clients."
             ]} />
           </div>
           <DashboardScreenshot />
         </section>
         <section className="section">
-          <SectionTitle title="Employee Journey" text="Employees do not create the organization and do not choose security policy." />
-          <Checklist items={["Employee installs or receives desktop client", "Employee signs in through company identity provider", "Policies sync from the organization", "Risky actions are held according to admin policy", "Approvals and audit show in the dashboard"]} />
+          <Notice title="Product rule" text="Solo users stay out of the dashboard. Organization admins and CISOs use it every day." />
+        </section>
+        <section className="section">
+          <SectionTitle title="Continue The Journey" text="Pick the next page based on whether you are installing for yourself or rolling out a team." />
+          <NextStepCards cards={[
+            ["Desktop client", "/clients/desktop-client", "Install hooks and understand the local-first runtime."],
+            ["Cloud rollout", "/deployment/openleash-cloud", "Finish organization setup, deployment tokens, and employee rollout."]
+          ]} />
         </section>
       </>
     )
   },
   "getting-started/private-cloud": {
     slug: "getting-started/private-cloud",
-    eyebrow: "Org Admin",
-    title: "Bootstrap a Private Cloud deployment.",
-    description: "Private Cloud uses the same core product surfaces, but the customer hosts the APIs, dashboard, database, and identity integration.",
+    eyebrow: "Private Cloud",
+    title: "Same OpenLeash, hosted by the customer.",
+    description: "Private Cloud is for organizations that need customer-owned APIs, dashboard, database, identity, logs, secrets, and upgrades.",
     body: (
       <>
         <section className="section first split">
           <div>
-            <SectionTitle title="Bootstrap Flow" text="There is no marketing-site sign-up for Private Cloud. The customer starts from the installed dashboard." />
+            <JourneyStrip steps={["Run stack", "Open dashboard", "Connect identity", "Deploy clients"]} active={1} />
+            <SectionTitle title="Bootstrap Flow" text="There is no public sign-up path. Start from the customer-hosted dashboard." />
             <StepList steps={[
               "Install the Private Cloud stack.",
               "Open the customer-hosted dashboard.",
-              "Create the first admin user with local credentials.",
+              "Create the first admin.",
               "Name the organization.",
-              "Connect identity or configure local auth.",
-              "Point desktop and mobile clients at the customer-hosted client-api."
+              "Connect identity.",
+              "Point clients at the customer API URL."
             ]} />
           </div>
           <PrivateCloudScreenshot />
         </section>
         <section className="section">
-          <SectionTitle title="Services" text="A minimal Private Cloud deployment needs these components." />
+          <SectionTitle title="What You Run" text="The public core stays open-source and customer-operated." />
           <div className="featureGrid">
-            <Mini title="client-api" text="Client-facing API for desktop hooks, evaluations, enrollment, mobile, and updates." />
-            <Mini title="dashboard-api" text="Admin API for users, identity, policy, audit, usage, and deployment." />
-            <Mini title="dashboard-web" text="Admin and CISO web app." />
+            <Mini title="Client API" text="Receives desktop, mobile, hook, enrollment, update, and evaluation traffic." />
+            <Mini title="Dashboard" text="Used by admins and CISOs for users, policy, audit, usage, and deployment." />
             <Mini title="Postgres" text="Customer-owned database. Run migrations before upgrades." />
-            <Mini title="Identity loader" text="Syncs Google Workspace, Okta, Entra ID, Ping, or LDAP-style providers." />
-            <Mini title="Desktop client" text="Still receives hooks locally first, then forwards to customer-hosted APIs." />
+            <Mini title="Identity sync" text="Google Workspace, Okta, Entra ID, Ping, or LDAP-style providers." />
+            <Mini title="Clients" text="Desktop still receives hooks locally first, then forwards to the customer API." />
           </div>
+        </section>
+        <section className="section">
+          <SectionTitle title="Continue The Journey" text="After the stack exists, the work moves into dashboard configuration and endpoint rollout." />
+          <NextStepCards cards={[
+            ["Private Cloud rollout", "/deployment/private-cloud", "Configure dashboard values, identity, policy, tokens, and clients."],
+            ["Self-hosted ops", "/deployment/self-hosted", "See operator responsibilities: services, migrations, secrets, ingress, and backups."]
+          ]} />
         </section>
       </>
     )
   },
-  "features/desktop-client": featurePage("Desktop Client", "Installed tray app, local API, hook installer, local settings, and the surface employees actually live with day to day.", <DesktopScreenshot />, [
+  "clients/desktop-client": featurePage("Desktop Client", "The installed app that agents talk to first. It owns the tray, local API, hook installer, and local settings.", <DesktopScreenshot />, [
     ["Local API", "Hooks call 127.0.0.1:9317 first, even in managed deployments."],
-    ["Hook installer", "Installs and updates integrations for supported local agents."],
-    ["Personal settings", "Stores local mode settings and optional LLM provider keys."],
-    ["Forwarding", "In cloud/private modes, forwards policy checks and events to the configured client-api."]
+    ["Hook installer", "Installs integrations for supported local agents."],
+    ["Settings", "Stores Local Mode settings and optional model keys."],
+    ["Forwarding", "Cloud and Private Cloud modes forward to the configured API when reachable."]
+  ], "Client", "clients/desktop-client"),
+  "clients/mobile-client": featurePage("Mobile Client", "The approval companion for people who need to decide away from the desk.", <MobileScreenshot />, [
+    ["Approvals", "Review held actions from your phone."],
+    ["Activity", "See the recent decisions that need your attention."],
+    ["Private Cloud", "Point mobile at the customer API URL and sign in with company identity."]
+  ], "Client", "clients/mobile-client"),
+  "clients/dashboard": featurePage("Dashboard for CISOs", "The admin surface for organizations. Individuals do not need it.", <DashboardScreenshot />, [
+    ["Identity", "Connect users, groups, roles, and devices."],
+    ["Policy", "Set the rules employees inherit."],
+    ["Audit", "Answer who did what, when, and why."],
+    ["Rollout", "Issue deployment tokens and track protected endpoints."]
+  ], "Client", "clients/dashboard"),
+  "features/action-protection": featurePage("Action Protection", "Approvals pause the moments where an agent needs human judgment before continuing.", <ApprovalScreenshot />, [
+    ["Held actions", "Pause commands, file access, deploys, secret exposure, and branch operations."],
+    ["Local first", "Individuals can decide locally. Teams can route decisions through policy."],
+    ["Audit context", "Each decision keeps user, agent, project, reason, policy, and time."]
   ]),
-  "features/approvals": featurePage("Approvals", "Approvals pause the moments where an agent needs human judgment before continuing.", <ApprovalScreenshot />, [
-    ["Held actions", "Block command execution, file access, deployment, secret exposure, or branch operations until a decision is made."],
-    ["Local first", "A local developer can approve from desktop. Managed teams can route decisions through organization policy."],
-    ["Audit context", "The approval includes user, agent, project, tool, reason, policy, and timestamp."]
+  "features/policies": featurePage("Policies", "Policies say what agents can do, what gets denied, and what needs approval.", <PolicyScreenshot />, [
+    ["Defaults", "Start with secrets, deletion, external sharing, force pushes, and infrastructure changes."],
+    ["Team rules", "Add rules for production systems, repositories, providers, and sensitive folders."],
+    ["Enforcement", "CISO-managed policy cannot be disabled locally by employees."]
   ]),
-  "features/policies": featurePage("Policies", "Policies describe what agents are allowed to do, what should be denied, and what requires approval.", <PolicyScreenshot />, [
-    ["Default protections", "Start with protections for filesystem destruction, secrets, external sharing, force pushes, and infrastructure changes."],
-    ["Team rules", "Admins can add rules for production systems, repositories, providers, and sensitive directories."],
-    ["Mandatory controls", "CISO-managed policies can be enforced for employees and cannot be disabled locally."]
+  "features/secret-protection": featurePage("Secret Protection", "Catch secrets before agents read, send, or commit them.", <SecretScreenshot />, [
+    ["Credential files", "Flag .env files, SSH keys, npm tokens, kubeconfigs, and cloud credentials."],
+    ["Prompt masking", "Mask or hold prompts with keys, tokens, PII, PHI, or credentials."],
+    ["Commit safety", "Require approval before suspicious staged content is committed."]
   ]),
-  "features/secret-protection": featurePage("Secret Protection", "OpenLeash detects secret access, credential files, token-looking values, and sensitive staged content.", <SecretScreenshot />, [
-    ["Credential file access", "Flag .env files, SSH keys, npm tokens, kubeconfigs, and cloud credential stores."],
-    ["Prompt masking", "Mask or hold prompts that include keys, tokens, PII, PHI, or credentials."],
-    ["Commit safety", "Require approval before committing staged content that appears to contain secrets."]
-  ]),
-  "features/prompt-compression": featurePage("Prompt Compression", "Reduce prompt size while preserving task intent, constraints, identifiers, code names, and important context.", <CompressionScreenshot />, [
+  "features/prompt-compression": featurePage("Prompt Compression", "Shrink large prompts while keeping task intent and important context.", <CompressionScreenshot />, [
     ["Cost control", "Lower token usage before sending context to model-backed checks."],
     ["Policy aware", "Compression can run alongside DLP and approval policies."],
-    ["BYOK friendly", "Use customer-provided provider keys when teams choose managed plus their own LLM."]
+    ["BYOK friendly", "Use customer-provided model keys when teams bring their own provider."]
   ]),
-  "features/identity": featurePage("Identity & Users", "Identity connects human users, groups, roles, and devices to policy decisions.", <IdentityScreenshot />, [
+  "features/identity": featurePage("Identity & Users", "Identity connects people, groups, roles, and devices to decisions.", <IdentityScreenshot />, [
     ["Providers", "Google Workspace, Microsoft Entra ID, Okta, Ping, and LDAP-style sync are the intended admin choices."],
-    ["Provisioning", "Employees sign in through the configured provider and are provisioned automatically."],
-    ["Roles", "Owners and admins manage policies, deployment, and audit. Employees follow organization policy."]
+    ["Provisioning", "Employees sign in through the configured provider."],
+    ["Roles", "Admins manage policy and audit. Employees follow organization policy."]
   ]),
-  "features/audit-log": featurePage("Audit Log", "The audit log explains what the agent tried, what policy decided, and how people responded.", <AuditScreenshot />, [
+  "features/audit-log": featurePage("Audit Log", "Audit explains what the agent tried and how OpenLeash responded.", <AuditScreenshot />, [
     ["Event history", "Track prompts, tools, shell commands, file access, and decisions."],
     ["Decision reasons", "Show why an action was allowed, held, masked, or denied."],
-    ["Investigation view", "Filter by user, agent, project, policy, event type, and time."]
+    ["Investigation", "Filter by user, agent, project, policy, event type, and time."]
   ]),
-  "features/usage": featurePage("Provider Usage", "Usage visibility helps admins understand requests, token usage, and spend across connected model providers.", <UsageScreenshot />, [
+  "features/usage": featurePage("Provider Usage", "Usage helps admins understand requests, tokens, and spend.", <UsageScreenshot />, [
     ["Provider connections", "Connect organization admin keys for OpenAI, Claude, Cursor, and other supported providers."],
-    ["Budget context", "See requests, tokens, and cost trends by team or provider."],
-    ["BYOK plans", "Bring your own model keys for AI-assisted checks and usage reporting."]
+    ["Budget context", "See requests, tokens, and cost trends."],
+    ["BYOK", "Bring your own model keys for checks and reporting."]
   ]),
-  "features/mobile": featurePage("Mobile Companion", "The mobile app is an approval companion and a sign-up surface for cloud and private deployments.", <MobileScreenshot />, [
-    ["Approvals", "Review held actions when away from the desk."],
-    ["Sign-up surface", "Personal and org cloud sign-up can start from mobile."],
-    ["Private Cloud", "Mobile points at the customer-hosted URL and signs in through the configured identity provider."]
-  ]),
-  "deployment/openleash-cloud": deploymentPage("OpenLeash Cloud", "The hosted SaaS deployment operated by OpenLeash.", `api.openleash.com              -> cloud-client-api
-api.dashboard.openleash.com    -> cloud-dashboard-api
-dashboard.openleash.com        -> cloud-dashboard-web
-docs.openleash.com             -> docs-web
-openleash.com                  -> main-web`, ["OpenLeash operates tenancy, billing, production credentials, abuse controls, and hosted release infrastructure.", "Public users install the same desktop client.", "Org admins use the hosted dashboard after work-identity sign-up."]),
-  "deployment/private-cloud": deploymentPage("Private Cloud", "Customer-hosted managed runtime for one organization or private multi-tenant environment.", `desktop-client -> customer client-api
-mobile-client  -> customer client-api
-dashboard-web  -> customer dashboard-api
-dashboard-api  -> customer Postgres
-identity sync  -> customer identity provider`, ["The UX mirrors hosted dashboard onboarding.", "The customer controls network, database, identity, backups, upgrades, and logs.", "No OpenLeash Cloud SaaS adapters are required in the public core."]),
-  "deployment/self-hosted": deploymentPage("Self-Hosted", "Download and run the open-source core yourself.", `npm run dev:mode:self-hosted
+  "deployment/openleash-cloud": deploymentPage("OpenLeash Cloud", "Hosted by OpenLeash. Individuals stay simple; organizations use the dashboard.", `Individual:
+1. Install desktop or mobile.
+2. Sign in from that app.
+3. Install hooks and start protection.
 
-# Production checklist
-Postgres ready
-Run migrations
-Deploy client-api
-Deploy dashboard-api
-Deploy dashboard-web
-Configure identity
-Distribute desktop-client`, ["Best for customers who want to manage their own runtime.", "Run migration tests before every upgrade.", "Keep production secrets in a secret manager or vault."]),
-  "reference/architecture": referencePage("Architecture", "How the product surfaces fit together.", `Local mode:
+Organization:
+1. Admin signs in with work identity.
+2. Dashboard opens setup.
+3. Configure identity, roles, policies, approvals, and deployment tokens.
+4. Deploy desktop clients.
+5. Employees sign in and inherit dashboard-managed configuration.`, ["No customer infrastructure is required for the hosted path.", "Do not expose implementation service names or internal hostnames in customer-facing rollout instructions.", "Admins configure the organization from the dashboard; employees install or receive the desktop and mobile clients."]),
+  "deployment/private-cloud": deploymentPage("Private Cloud", "Customer-hosted rollout for organizations.", `Admin bootstrap:
+1. Open the customer-hosted dashboard.
+2. Enter the organization name.
+3. Save the API URL used by desktop and mobile.
+4. Connect identity.
+5. Configure policies, approvals, audit, usage, and updates.
+6. Create a deployment token.
+7. Deploy clients.
+
+Endpoint setup:
+desktop app -> Organization -> Private Cloud -> API URL -> company sign-in -> agents -> install hooks
+mobile app  -> custom API URL -> company sign-in -> approvals/activity`, ["Same admin concepts as OpenLeash Cloud.", "Customer owns API, dashboard, database, identity, logs, backups, and upgrades.", "Employees sign in and receive dashboard-managed policy."]),
+  "deployment/self-hosted": deploymentPage("Self-Hosted", "Operator notes for running Private Cloud yourself.", `Platform setup:
+1. Provision Postgres.
+2. Deploy client-api, dashboard-api, and dashboard-web.
+3. Run migrations.
+4. Store credentials in your secret manager.
+5. Expose the client API to desktop/mobile.
+6. Expose the dashboard to admins.
+
+Dashboard setup:
+1. Configure identity.
+2. Sync users and groups.
+3. Assign roles.
+4. Configure policies and provider keys.
+5. Issue deployment tokens.
+6. Roll out clients.
+
+Client bootstrap:
+desktop: Organization -> Private Cloud -> your managed API URL -> sign in -> install hooks
+mobile:  Custom API URL -> sign in -> register device -> approve held actions`, ["Self-hosted is the operator-run form of Private Cloud, not a separate product mode.", "Document services, secrets, ingress, migration jobs, and backups.", "Keep Local Mode free of Postgres and dashboard requirements."]),
+  "reference/architecture": referencePage("Architecture", "The shortest useful map.", `Local Mode:
 agent hook -> desktop local API -> local evaluation
 
-Managed modes:
+Cloud and Private Cloud:
 agent hook -> desktop local API -> client-api -> policy/evaluation
 dashboard-web -> dashboard-api -> Postgres
 
 Private Cloud:
 same public core, customer-hosted services`),
-  "reference/api": referencePage("API Surfaces", "OpenLeash separates client-facing and dashboard/admin APIs.", `client-api:
+  "reference/api": referencePage("API Surfaces", "Clients and admins use different APIs.", `client-api:
 /health
 /v1/hooks/:agent/:event
 /v1/evaluate
@@ -444,7 +582,7 @@ dashboard-api:
 /admin/policies
 /admin/logs
 /admin/provider-usage`),
-  "reference/migrations": referencePage("Migrations", "Treat migrations as release-critical for all deployment modes.", `Test matrix:
+  "reference/migrations": referencePage("Migrations", "Migrations matter in managed modes; Local Mode must stay Postgres-free.", `Test matrix:
 1. Fresh local install
 2. Old local install -> migrate -> current
 3. Private Cloud Postgres old schema -> current
@@ -453,7 +591,7 @@ dashboard-api:
 
 Rule:
 Never require Postgres for Local mode.`),
-  "reference/troubleshooting": referencePage("Troubleshooting", "Start from the symptom and the deployment mode.", `Desktop hook not firing:
+  "reference/troubleshooting": referencePage("Troubleshooting", "Start with the symptom, then the mode.", `Desktop hook not firing:
 - Check desktop app is running
 - Check local API on 127.0.0.1:9317
 - Reinstall hooks
@@ -470,6 +608,12 @@ Dashboard missing data:
 - Check organization/tenant mapping`)
 };
 
+pages["getting-started/personal-cloud"] = pages["getting-started/openleash-cloud"];
+pages["getting-started/team-cloud"] = pages["getting-started/openleash-cloud"];
+pages["features/desktop-client"] = pages["clients/desktop-client"];
+pages["features/mobile"] = pages["clients/mobile-client"];
+pages["features/approvals"] = pages["features/action-protection"];
+
 export function RenderDocPage({ page, activePath }: { page: DocPage; activePath: string }) {
   return (
     <DocsLayout activePath={`/${activePath}`}>
@@ -479,11 +623,11 @@ export function RenderDocPage({ page, activePath }: { page: DocPage; activePath:
   );
 }
 
-function featurePage(title: string, description: string, screenshot: ReactNode, points: Array<[string, string]>): DocPage {
-  const slug = `features/${title.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+function featurePage(title: string, description: string, screenshot: ReactNode, points: Array<[string, string]>, eyebrow = "Feature", slugOverride?: string): DocPage {
+  const slug = slugOverride ?? `features/${title.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
   return {
     slug,
-    eyebrow: "Feature",
+    eyebrow,
     title,
     description,
     body: (
@@ -498,11 +642,11 @@ function featurePage(title: string, description: string, screenshot: ReactNode, 
           {screenshot}
         </section>
         <section className="section">
-          <SectionTitle title="Where It Appears" text="The same feature shows up differently depending on whether you are a solo developer, an organization admin, or an employee." />
+          <SectionTitle title="Where You See It" text="Start simple. The same idea grows as your setup grows." />
           <DecisionTable rows={[
-            ["Solo local", "Desktop client", "Configure and review locally."],
-            ["Solo cloud", "Desktop plus account surface", "Cloud sync without dashboard onboarding."],
-            ["Team cloud", "Dashboard and desktop", "Admins configure policy; employees follow it."],
+            ["Individual local", "Desktop client", "Configure and review locally."],
+            ["Individual cloud", "Desktop plus account surface", "Cloud sync, no dashboard."],
+            ["Organization", "Dashboard and clients", "Admins configure policy; employees follow it."],
             ["Private Cloud", "Customer-hosted dashboard", "Same concepts, customer-owned backend."]
           ]} />
         </section>
@@ -521,14 +665,25 @@ function deploymentPage(title: string, description: string, code: string, notes:
       <>
         <section className="section first split">
           <div>
-            <SectionTitle title="Deployment Shape" text={description} />
+            <JourneyStrip steps={["Prepare", "Configure", "Deploy", "Verify"]} active={1} />
+            <SectionTitle title="Rollout Flow" text={description} />
             <CodeBlock>{code}</CodeBlock>
           </div>
-          <PrivateCloudScreenshot />
+          <RolloutScreenshot />
         </section>
         <section className="section">
           <SectionTitle title="Operator Notes" text="Keep these in mind before you release or upgrade." />
           <Checklist items={notes} />
+        </section>
+        <section className="section">
+          <SectionTitle title="Complete When" text="Use this as the practical finish line for the rollout." />
+          <Checklist items={[
+            "Admins can sign in to the right OpenLeash surface",
+            "Identity, users, roles, and policies are saved",
+            "A deployment token or install path exists",
+            "At least one desktop client is enrolled",
+            "A test risky action is allowed, held, or denied as expected"
+          ]} />
         </section>
       </>
     )
@@ -559,7 +714,7 @@ function Hero({ eyebrow, title, description, primary }: { eyebrow: string; title
       {primary && (
         <div className="heroActions">
           <a className="primary" href={primary.href}>{primary.label} <ArrowRight size={16} /></a>
-          <a className="secondary" href="/features/desktop-client"><MonitorDown size={16} /> Explore features</a>
+          <a className="secondary" href="/clients/desktop-client"><MonitorDown size={16} /> Explore clients</a>
         </div>
       )}
     </section>
@@ -587,11 +742,60 @@ function SetupGrid() {
   );
 }
 
+function AudienceGrid() {
+  return (
+    <div className="audienceGrid">
+      {audienceCards.map((card) => {
+        const Icon = card.icon;
+        return (
+          <a className="flowCard audienceCard" href={card.href} key={card.href}>
+            <span className="tag">{card.label}</span>
+            <Icon size={24} />
+            <h3>{card.title}</h3>
+            <p>{card.copy}</p>
+            <ul>
+              {card.bullets.map((item) => <li key={item}><Check size={14} /> {item}</li>)}
+            </ul>
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
 function SectionTitle({ title, text }: { title: string; text: string }) {
   return (
     <div className="sectionHead">
       <h2>{title}</h2>
       <p>{text}</p>
+    </div>
+  );
+}
+
+function JourneyStrip({ steps, active }: { steps: string[]; active: number }) {
+  return (
+    <div className="journeyStrip" aria-label="Journey">
+      {steps.map((step, index) => (
+        <div className={index <= active ? "done" : ""} key={step}>
+          <span>{index + 1}</span>
+          <strong>{step}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function NextStepCards({ cards }: { cards: Array<[string, string, string]> }) {
+  return (
+    <div className="nextGrid">
+      {cards.map(([title, href, text]) => (
+        <a className="nextCard" href={href} key={href}>
+          <span>Next</span>
+          <strong>{title}</strong>
+          <p>{text}</p>
+          <ArrowRight size={16} />
+        </a>
+      ))}
     </div>
   );
 }
@@ -638,7 +842,7 @@ function DesktopScreenshot() {
       <div className="shotTitle"><Laptop size={18} /> OpenLeash Desktop</div>
       <div className="modeRow"><button>Individual</button><button className="active">Local mode</button></div>
       <div className="field"><span>LLM provider</span><strong>Your key, stored locally</strong></div>
-      <div className="field"><span>Hooks</span><strong>Claude Code, Cursor, Codex</strong></div>
+      <div className="field"><span>Hooks</span><strong>Claude Code, Codex, OpenClaw</strong></div>
       <div className="status good"><Check size={15} /> Local API listening on 127.0.0.1:9317</div>
     </div>
   );
@@ -651,7 +855,7 @@ function RuntimeScreenshot() {
       <div className="line" />
       <div className="node"><Laptop size={18} /> Desktop local API</div>
       <div className="line" />
-      <div className="node"><Cloud size={18} /> Cloud or Private client-api</div>
+      <div className="node"><Cloud size={18} /> Cloud or Private managed API</div>
     </div>
   );
 }
@@ -695,13 +899,25 @@ function DashboardScreenshot() {
 function PrivateCloudScreenshot() {
   return (
     <div className="screenshot privateShot">
-      <div className="node"><MonitorDown size={18} /> desktop-client</div>
+      <div className="node"><MonitorDown size={18} /> Desktop and mobile clients</div>
       <div className="line" />
-      <div className="node"><Code2 size={18} /> client-api</div>
-      <div className="node"><UsersRound size={18} /> dashboard-web</div>
-      <div className="node"><ServerCog size={18} /> dashboard-api</div>
-      <div className="node"><Database size={18} /> customer Postgres</div>
-      <div className="node"><KeyRound size={18} /> customer IdP</div>
+      <div className="node"><Code2 size={18} /> Customer-managed API URL</div>
+      <div className="node"><UsersRound size={18} /> Admin dashboard</div>
+      <div className="node"><Database size={18} /> Customer Postgres</div>
+      <div className="node"><KeyRound size={18} /> Customer identity provider</div>
+    </div>
+  );
+}
+
+function RolloutScreenshot() {
+  return (
+    <div className="screenshot privateShot">
+      <div className="node"><UsersRound size={18} /> Admin configures dashboard</div>
+      <div className="line" />
+      <div className="node"><KeyRound size={18} /> Identity and roles</div>
+      <div className="node"><ShieldCheck size={18} /> Policies and approvals</div>
+      <div className="node"><MonitorDown size={18} /> Desktop rollout</div>
+      <div className="node"><Smartphone size={18} /> Mobile approvals</div>
     </div>
   );
 }
@@ -727,7 +943,7 @@ function IdentityScreenshot() {
 }
 
 function AuditScreenshot() {
-  return <CardShot icon={<FileSearch />} title="Audit event" rows={["Agent: Claude Code", "Action: file read", "Decision: approved"]} />;
+  return <CardShot icon={<FileSearch />} title="Audit event" rows={["Agent: OpenClaw", "Action: file read", "Decision: approved"]} />;
 }
 
 function UsageScreenshot() {
@@ -738,7 +954,7 @@ function MobileScreenshot() {
   return (
     <div className="phoneShot">
       <div className="phoneTop" />
-      <div className="phoneCard"><Smartphone size={18} /><strong>Approval waiting</strong><p>Claude Code wants to read .env.production</p><button>Approve</button></div>
+      <div className="phoneCard"><Smartphone size={18} /><strong>Approval waiting</strong><p>An agent wants to read .env.production</p><button>Approve</button></div>
     </div>
   );
 }

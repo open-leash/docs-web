@@ -6,8 +6,8 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 FROM node:22-alpine AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-ARG NEXT_PUBLIC_SITE_URL=https://docs.openleash.com
-ARG NEXT_PUBLIC_DASHBOARD_URL=https://dashboard.openleash.com
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:9306
+ARG NEXT_PUBLIC_DASHBOARD_URL=http://localhost:9300
 ARG NEXT_PUBLIC_GITHUB_URL=https://github.com/open-leash
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_DASHBOARD_URL=$NEXT_PUBLIC_DASHBOARD_URL
