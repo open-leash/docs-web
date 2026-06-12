@@ -151,28 +151,54 @@ const audienceCards = [
 ];
 
 export function DocsLayout({ activePath, children }: { activePath: string; children: ReactNode }) {
+  const navItems = navGroups.flatMap((group) => group.items);
+  const currentPage =
+    navItems.find((item) => item.href === activePath) ??
+    navItems.find((item) => isActive(activePath, item.href));
+  const renderNav = () => (
+    <nav aria-label="Documentation">
+      {navGroups.map((group) => (
+        <section key={group.title}>
+          <h2>{group.title}</h2>
+          {group.items.map((item) => (
+            <a className={isActive(activePath, item.href) ? "active" : ""} href={item.href} key={item.href}>
+              {item.label}
+            </a>
+          ))}
+        </section>
+      ))}
+    </nav>
+  );
+
   return (
     <main className="docsShell">
       <aside className="side">
-        <a className="brand" href="/">
-          <img className="mark" src="/openleash-icon.png" alt="" />
-          <span>
-            <strong>OpenLeash</strong>
-            <em>Docs</em>
-          </span>
-        </a>
-        <nav aria-label="Documentation">
-          {navGroups.map((group) => (
-            <section key={group.title}>
-              <h2>{group.title}</h2>
-              {group.items.map((item) => (
-                <a className={isActive(activePath, item.href) ? "active" : ""} href={item.href} key={item.href}>
-                  {item.label}
-                </a>
-              ))}
-            </section>
-          ))}
-        </nav>
+        <details className="mobileNav">
+          <summary>
+            <span className="mobileBrand">
+              <img className="mark" src="/openleash-icon.png" alt="" />
+              <span>
+                <strong>OpenLeash</strong>
+                <em>{currentPage?.label ?? "Docs"}</em>
+              </span>
+            </span>
+            <span className="menuButton" aria-hidden="true">
+              <span className="menuGlyph" />
+              Menu
+            </span>
+          </summary>
+          {renderNav()}
+        </details>
+        <div className="sideInner">
+          <a className="brand" href="/">
+            <img className="mark" src="/openleash-icon.png" alt="" />
+            <span>
+              <strong>OpenLeash</strong>
+              <em>{currentPage?.label ?? "Docs"}</em>
+            </span>
+          </a>
+          {renderNav()}
+        </div>
         <div className="sidePanel">
           <p>Need source, releases, or examples?</p>
           <a href={githubUrl}><Github size={15} /> OpenLeash on GitHub</a>
