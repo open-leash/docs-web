@@ -1,12 +1,42 @@
-# OpenLeash Docs Web 📚✨
+<div align="center">
 
-[![Docs](https://img.shields.io/badge/docs-public-111718)](#)
-[![Next.js](https://img.shields.io/badge/next.js-15-black)](#)
-[![Contributors](https://img.shields.io/badge/contributors-welcome-0c8b67)](#)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366F1,45:14B8A6,100:111827&height=220&section=header&text=Docs%20Web&fontSize=56&fontColor=ffffff&fontAlignY=38&desc=The%20public%20manual%20for%20agent%20control.&descSize=18&descAlignY=58" width="100%" />
 
-The public documentation site for OpenLeash.
+<p>
+  <a href="https://docs.openleash.com"><img src="https://img.shields.io/badge/Docs-docs.openleash.com-6366F1?style=for-the-badge&logo=readthedocs&logoColor=white" /></a>
+  <img src="https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Voice-practical%20%2B%20clear-14B8A6?style=for-the-badge" />
+</p>
 
-## Run
+<h3>📚 Documentation that makes agent safety feel usable.</h3>
+
+</div>
+
+---
+
+## ✨ What this app is
+
+`docs-web` is the public documentation site for OpenLeash.
+
+It explains how to install, run, self-host, integrate, and reason about OpenLeash across Local mode, Private Cloud, and OpenLeash Cloud.
+
+---
+
+## 🧭 What belongs here
+
+- Installation guides
+- Local mode, Private Cloud, and OpenLeash Cloud explanations
+- API contracts
+- Agent hook support notes
+- Mobile setup
+- Identity provider setup
+- Architecture and open-source boundary docs
+- Migration and release workflow guidance
+- Community contribution docs
+
+---
+
+## 🛠 Run locally
 
 ```bash
 npm install
@@ -19,17 +49,9 @@ Open:
 http://localhost:9306
 ```
 
-## What Belongs Here
+---
 
-- Installation guides
-- Standalone, managed private-cloud, and OpenLeash Cloud explanations
-- API contracts
-- Agent hook support notes
-- Identity provider setup guides
-- Architecture and open-core boundaries
-- Community contribution docs
-
-## Example Doc Style
+## ✍️ Writing style
 
 Prefer real commands:
 
@@ -37,8 +59,23 @@ Prefer real commands:
 npm run desktop-cli -- install-hooks --all
 ```
 
-Then explain what happened, where files were touched, and how to undo it.
+Then explain:
 
-## Voice
+- What happened
+- Which files or systems were touched
+- How to verify it worked
+- How to undo it safely
 
-Clear, practical, builder-friendly. Security should feel understandable, not mystical.
+---
+
+## 💛 Voice
+
+Clear, practical, builder-friendly.
+
+Security should feel understandable, not mystical.
+
+<div align="center">
+
+### Docs are part of the product. Make them feel like a good teammate.
+
+</div>
