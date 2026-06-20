@@ -52,7 +52,6 @@ export const navGroups: NavGroup[] = [
       { href: "/getting-started", label: "Pick Your Path" },
       { href: "/getting-started/individual", label: "I'm an Individual" },
       { href: "/getting-started/organization", label: "I'm an Organization" },
-      { href: "/getting-started/local-mode", label: "Local Mode" },
       { href: "/getting-started/openleash-cloud", label: "OpenLeash Cloud" },
       { href: "/getting-started/private-cloud", label: "Private Cloud" }
     ]
@@ -98,14 +97,6 @@ export const navGroups: NavGroup[] = [
 
 const setupCards = [
   {
-    href: "/getting-started/local-mode",
-    icon: Laptop,
-    label: "Individual",
-    title: "Local Mode",
-    copy: "I want protection on my own machine, no account, no dashboard.",
-    bullets: ["Works offline", "Desktop client only", "Optional local model key"]
-  },
-  {
     href: "/getting-started/openleash-cloud",
     icon: Cloud,
     label: "Individual",
@@ -137,8 +128,8 @@ const audienceCards = [
     icon: Laptop,
     label: "Individual",
     title: "I'm protecting my own agents",
-    copy: "Start with the desktop client. Pick Local Mode for no cloud, or OpenLeash Cloud for a personal hosted account.",
-    bullets: ["No company setup", "No CISO dashboard", "Local or personal cloud"]
+    copy: "Start with the desktop client and connect it to OpenLeash Cloud. Solo users stay out of the dashboard.",
+    bullets: ["No company setup", "No CISO dashboard", "Personal cloud"]
   },
   {
     href: "/getting-started/organization",
@@ -242,14 +233,10 @@ export function HomePage() {
 
       <section className="section split">
         <div>
-          <SectionTitle title="One Idea To Remember" text="Hooks call the desktop client first. That keeps Local mode local, and lets cloud modes keep working through the same client." />
+          <SectionTitle title="One Idea To Remember" text="Hooks call the desktop client first. The desktop is a local relay; policy, plugins, approvals, audit, and evaluation come from the configured backend." />
           <CodeBlock>{`Installed hooks -> Desktop local API
 http://127.0.0.1:9317/v1/hooks/:agent/:event
 
-Local mode:
-desktop-client -> local evaluation
-
-Managed modes:
 desktop-client -> local API -> client-api`}</CodeBlock>
         </div>
         <RuntimeScreenshot />
@@ -271,14 +258,13 @@ export const pages: Record<string, DocPage> = {
           <AudienceGrid />
         </section>
         <section className="section">
-          <SectionTitle title="Already Know The Mode?" text="OpenLeash has three modes: Local Mode, OpenLeash Cloud, and Private Cloud." />
+          <SectionTitle title="Already Know The Mode?" text="OpenLeash has two backend-backed modes: OpenLeash Cloud and Private Cloud." />
           <SetupGrid />
         </section>
         <section className="section">
           <SectionTitle title="Quick Decision" text="Read this like a normal person in a hurry." />
           <DecisionTable rows={[
-            ["Just me, no cloud", "Local Mode", "Install the desktop client. No account. No dashboard."],
-            ["Just me, with sync", "OpenLeash Cloud", "Create a personal account where you started. Still no dashboard."],
+            ["Just me", "OpenLeash Cloud", "Create a personal account where you started. Still no dashboard."],
             ["My company", "OpenLeash Cloud", "Use work identity, then configure users and policy in the dashboard."],
             ["My company hosts it", "Private Cloud", "Run the public core in your own environment."]
           ]} />
@@ -286,7 +272,7 @@ export const pages: Record<string, DocPage> = {
         <section className="section">
           <SectionTitle title="Next Step" text="Choose the full journey that matches you." />
           <NextStepCards cards={[
-            ["I'm an individual", "/getting-started/individual", "Install desktop, choose Local Mode or personal cloud, and protect your own agents."],
+            ["I'm an individual", "/getting-started/individual", "Install desktop, connect OpenLeash Cloud, and protect your own agents."],
             ["I'm an organization", "/getting-started/organization", "Connect identity, configure policy, and roll OpenLeash out to your team."]
           ]} />
         </section>
@@ -297,7 +283,7 @@ export const pages: Record<string, DocPage> = {
     slug: "getting-started/individual",
     eyebrow: "Individual",
     title: "You want protection without admin homework.",
-    description: "Start with the desktop client. Choose Local Mode if you want everything on your machine, or OpenLeash Cloud if you want a personal hosted account.",
+    description: "Start with the desktop client and connect to OpenLeash Cloud. Solo users never go to the dashboard.",
     body: (
       <>
         <section className="section first split">
@@ -307,7 +293,7 @@ export const pages: Record<string, DocPage> = {
             <StepList steps={[
               "Install the desktop client.",
               "Choose Individual.",
-              "Pick Local Mode or OpenLeash Cloud.",
+              "Sign in to OpenLeash Cloud.",
               "Install hooks for the agents you use.",
               "Keep working. OpenLeash interrupts only the risky stuff."
             ]} />
@@ -318,10 +304,10 @@ export const pages: Record<string, DocPage> = {
           <Notice title="Tiny but important" text="Solo OpenLeash Cloud users never go to the dashboard. That surface is for organization admins and security teams." />
         </section>
         <section className="section">
-          <SectionTitle title="Pick Your Individual Mode" text="Both paths start in the desktop client. Pick the one that fits how you want OpenLeash to run." />
+          <SectionTitle title="Individual Backend" text="Individual desktop installs use OpenLeash Cloud for policy, plugin settings, approvals, audit, and evaluation." />
           <NextStepCards cards={[
-            ["Local Mode", "/getting-started/local-mode", "No account, no hosted API, no dashboard. Everything starts and stays on your computer."],
-            ["OpenLeash Cloud", "/getting-started/openleash-cloud", "Personal hosted account and sync, while still keeping solo users out of the dashboard."]
+            ["OpenLeash Cloud", "/getting-started/openleash-cloud", "Personal hosted account and sync, while still keeping solo users out of the dashboard."],
+            ["Desktop client", "/clients/desktop-client", "See how hooks reach the local relay before the relay forwards to the backend."]
           ]} />
         </section>
       </>
@@ -361,20 +347,19 @@ export const pages: Record<string, DocPage> = {
   },
   "getting-started/local-mode": {
     slug: "getting-started/local-mode",
-    eyebrow: "Local Mode",
-    title: "One computer. No cloud required.",
-    description: "Local Mode is for an individual who wants protection with no account, no hosted API, no dashboard, and no internet dependency.",
+    eyebrow: "Desktop Backend",
+    title: "Desktop requires a backend.",
+    description: "OpenLeash no longer supports a fully local desktop product mode. The desktop app is a local relay for OpenLeash Cloud or Private Cloud.",
     body: (
       <>
         <section className="section first split">
           <div>
-            <JourneyStrip steps={["Install desktop", "Choose Local Mode", "Add optional key", "Install hooks", "Protected"]} active={1} />
-            <SectionTitle title="What Happens" text="The desktop client starts a local API and installs hooks. Agent events stay on your machine first." />
+            <JourneyStrip steps={["Install desktop", "Choose backend", "Sign in", "Install hooks", "Protected"]} active={1} />
+            <SectionTitle title="What Happens" text="The desktop client starts a local relay API and installs hooks. The relay forwards decisions to OpenLeash Cloud or Private Cloud." />
             <StepList steps={[
               "Install the desktop client.",
-              "Choose Individual.",
-              "Choose Local Mode.",
-              "Optionally add your own model key.",
+              "Choose OpenLeash Cloud or Private Cloud.",
+              "Sign in or enroll with your organization.",
               "Install agent hooks.",
               "Keep coding."
             ]} />
@@ -382,20 +367,19 @@ export const pages: Record<string, DocPage> = {
           <DesktopScreenshot />
         </section>
         <section className="section">
-          <SectionTitle title="Model Keys" text="A model key is optional. Add one for richer checks; skip it for deterministic local rules." />
-          <CodeBlock>{`Desktop settings:
-Provider: OpenAI / Claude / Gemini / DeepSeek compatible
-API key: stored by the desktop client
+          <SectionTitle title="Backend Required" text="Policy, evaluation, plugin settings, approvals, audit, and account state come from the backend." />
+          <CodeBlock>{`Hooks call:
+http://127.0.0.1:9317/v1/hooks/:agent/:event
 
-Hooks call:
-http://127.0.0.1:9317/v1/hooks/:agent/:event`}</CodeBlock>
+Desktop relay forwards to:
+OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
         </section>
         <section className="section">
-          <SectionTitle title="What You Do Not Need" text="This is the lightest path." />
-          <Checklist items={["No OpenLeash account", "No dashboard", "No Postgres", "No Docker", "No Cloud Run", "No identity provider"]} />
+          <SectionTitle title="What This Means" text="The desktop may keep local cache/setup state, but it is not the source of truth." />
+          <Checklist items={["Backend is required", "Hooks still target 127.0.0.1 first", "Backend outages fail closed", "BYOK keys live in account/org settings", "CISO plugin settings flow from the dashboard"]} />
         </section>
         <section className="section">
-          <SectionTitle title="Finish Line" text="You are done when the desktop client is running, hooks are installed, and the local API is listening." />
+          <SectionTitle title="Finish Line" text="You are done when the desktop client is running, hooks are installed, and the backend connection is healthy." />
           <NextStepCards cards={[
             ["Understand the desktop client", "/clients/desktop-client", "See what the tray app owns and how hooks reach it."],
             ["Troubleshooting", "/reference/troubleshooting", "Use this if hooks are not firing or the local API is not reachable."]
@@ -444,7 +428,7 @@ http://127.0.0.1:9317/v1/hooks/:agent/:event`}</CodeBlock>
         <section className="section">
           <SectionTitle title="Continue The Journey" text="Pick the next page based on whether you are installing for yourself or rolling out a team." />
           <NextStepCards cards={[
-            ["Desktop client", "/clients/desktop-client", "Install hooks and understand the local-first runtime."],
+            ["Desktop client", "/clients/desktop-client", "Install hooks and understand the local relay runtime."],
             ["Cloud rollout", "/deployment/openleash-cloud", "Finish organization setup, deployment tokens, and employee rollout."]
           ]} />
         </section>
@@ -493,11 +477,11 @@ http://127.0.0.1:9317/v1/hooks/:agent/:event`}</CodeBlock>
       </>
     )
   },
-  "clients/desktop-client": featurePage("Desktop Client", "The installed app that agents talk to first. It owns the tray, local API, hook installer, and local settings.", <DesktopScreenshot />, [
+  "clients/desktop-client": featurePage("Desktop Client", "The installed app that agents talk to first. It owns the tray, local relay API, hook installer, and backend enrollment.", <DesktopScreenshot />, [
     ["Local API", "Hooks call 127.0.0.1:9317 first, even in managed deployments."],
     ["Hook installer", "Installs integrations for supported local agents."],
-    ["Settings", "Stores Local Mode settings and optional model keys."],
-    ["Forwarding", "Cloud and Private Cloud modes forward to the configured API when reachable."]
+    ["Settings", "Stores desktop preferences and backend enrollment state."],
+    ["Forwarding", "OpenLeash Cloud and Private Cloud modes forward to the configured API."]
   ], "Client", "clients/desktop-client"),
   "clients/mobile-client": featurePage("Mobile Client", "The approval companion for people who need to decide away from the desk.", <MobileScreenshot />, [
     ["Approvals", "Review held actions from your phone."],
@@ -512,7 +496,7 @@ http://127.0.0.1:9317/v1/hooks/:agent/:event`}</CodeBlock>
   ], "Client", "clients/dashboard"),
   "features/action-protection": featurePage("Action Protection", "Approvals pause the moments where an agent needs human judgment before continuing.", <ApprovalScreenshot />, [
     ["Held actions", "Pause commands, file access, deploys, secret exposure, and branch operations."],
-    ["Local first", "Individuals can decide locally. Teams can route decisions through policy."],
+    ["Local relay", "Individuals and teams use the desktop relay while decisions come from the configured backend."],
     ["Audit context", "Each decision keeps user, agent, project, reason, policy, and time."]
   ]),
   "features/policies": featurePage("Policies", "Policies say what agents can do, what gets denied, and what needs approval.", <PolicyScreenshot />, [
@@ -586,11 +570,8 @@ Dashboard setup:
 
 Client bootstrap:
 desktop: Organization -> Private Cloud -> your managed API URL -> sign in -> install hooks
-mobile:  Custom API URL -> sign in -> register device -> approve held actions`, ["Self-hosted is the operator-run form of Private Cloud, not a separate product mode.", "Document services, secrets, ingress, migration jobs, and backups.", "Keep Local Mode free of Postgres and dashboard requirements."]),
-  "reference/architecture": referencePage("Architecture", "The shortest useful map.", `Local Mode:
-agent hook -> desktop local API -> local evaluation
-
-Cloud and Private Cloud:
+mobile:  Custom API URL -> sign in -> register device -> approve held actions`, ["Self-hosted is the operator-run form of Private Cloud, not a separate product mode.", "Document services, secrets, ingress, migration jobs, and backups.", "Desktop clients require the managed backend."]),
+  "reference/architecture": referencePage("Architecture", "The shortest useful map.", `Cloud and Private Cloud:
 agent hook -> desktop local API -> client-api -> policy/evaluation
 dashboard-web -> dashboard-api -> Postgres
 
@@ -608,15 +589,15 @@ dashboard-api:
 /admin/policies
 /admin/logs
 /admin/provider-usage`),
-  "reference/migrations": referencePage("Migrations", "Migrations matter in managed modes; Local Mode must stay Postgres-free.", `Test matrix:
-1. Fresh local install
-2. Old local install -> migrate -> current
+  "reference/migrations": referencePage("Migrations", "Migrations matter because the backend is the product authority.", `Test matrix:
+1. Fresh desktop install with backend enrollment
+2. Old desktop cache -> migrate -> current
 3. Private Cloud Postgres old schema -> current
 4. Public Cloud Postgres migration
 5. Self-hosted manual upgrade
 
 Rule:
-Never require Postgres for Local mode.`),
+Desktop cache migrations must not become product authority; backend data lives in Postgres.`),
   "reference/troubleshooting": referencePage("Troubleshooting", "Start with the symptom, then the mode.", `Desktop hook not firing:
 - Check desktop app is running
 - Check local API on 127.0.0.1:9317
@@ -866,10 +847,10 @@ function DesktopScreenshot() {
     <div className="screenshot desktopShot">
       <div className="windowBar"><span /><span /><span /></div>
       <div className="shotTitle"><Laptop size={18} /> OpenLeash Desktop</div>
-      <div className="modeRow"><button>Individual</button><button className="active">Local mode</button></div>
-      <div className="field"><span>LLM provider</span><strong>Your key, stored locally</strong></div>
-      <div className="field"><span>Hooks</span><strong>Claude Code, Codex, OpenClaw</strong></div>
-      <div className="status good"><Check size={15} /> Local API listening on 127.0.0.1:9317</div>
+      <div className="modeRow"><button>Individual</button><button className="active">OpenLeash Cloud</button></div>
+      <div className="field"><span>Backend</span><strong>api.openleash.com</strong></div>
+      <div className="field"><span>Hooks</span><strong>Claude, Codex, Cursor, Gemini, OpenCode, OpenClaw, NanoClaw</strong></div>
+      <div className="status good"><Check size={15} /> Local relay connected to backend</div>
     </div>
   );
 }

@@ -18,14 +18,14 @@
 
 `docs-web` is the public documentation site for OpenLeash.
 
-It explains how to install, run, self-host, integrate, and reason about OpenLeash across Local mode, Private Cloud, and OpenLeash Cloud.
+It explains how to install, run, self-host, integrate, and reason about OpenLeash across OpenLeash Cloud and Private Cloud.
 
 ---
 
 ## 🧭 What belongs here
 
 - Installation guides
-- Local mode, Private Cloud, and OpenLeash Cloud explanations
+- OpenLeash Cloud and Private Cloud explanations
 - API contracts
 - Agent hook support notes
 - Mobile setup
