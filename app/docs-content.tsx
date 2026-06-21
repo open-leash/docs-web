@@ -606,7 +606,7 @@ same public core, customer-hosted services`),
   publisher: "acme",
   runtime: "node",
   entrypoint: "src/index.ts",
-  stages: ["prompt.beforeSubmit"],
+  events: ["prompt.beforeSubmit"],
   permissions: ["event:read", "prompt:read", "audit:write"],
   effects: ["observe"],
   ordering: { priority: 250, after: ["openleash.dlp"] },
@@ -648,7 +648,7 @@ same public core, customer-hosted services`),
 }`}</CodeBlock>
           </div>
           <div className="featureStack">
-            <Mini icon={<ListChecks />} title="Stages" text="Use the narrowest stage: startup, agent detected, skill changed, prompt before submit, agent response, tool before/after use, session start/end." />
+            <Mini icon={<ListChecks />} title="Events" text="Use the narrowest event: startup, agent detected, skill changed, prompt before submit, agent response, tool before/after use, session start/end." />
             <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, tool read, model invoke, storage, audit, decision, notification, or filesystem read." />
             <Mini icon={<Database />} title="Storage" text="Use plugin-scoped JSON storage. OpenLeash injects organization and plugin identity so plugins cannot read each other's state." />
           </div>
@@ -708,7 +708,7 @@ if (!previous) {
         <section className="section">
           <SectionTitle title="Source And Examples" text="Plugin examples and the preinstalled plugin repos live under the OpenLeash GitHub organization." />
           <NextStepCards cards={[
-            ["Plugin examples", "https://github.com/open-leash/openleash-plugins", "Read the plugin contract, copy a starter, and see storage/capability examples."],
+            ["Plugin examples", "https://github.com/open-leash/plugins", "Read the plugin contract, copy a starter, and see storage/capability examples."],
             ["Client API source", "https://github.com/open-leash/client-api/tree/main/src/plugins", "See the runtime and first-party plugin integration."]
           ]} />
         </section>
