@@ -88,6 +88,7 @@ export const navGroups: NavGroup[] = [
     title: "Reference",
     items: [
       { href: "/reference/architecture", label: "Architecture" },
+      { href: "/reference/plugins", label: "Plugins" },
       { href: "/reference/api", label: "API Surfaces" },
       { href: "/reference/migrations", label: "Migrations" },
       { href: "/reference/troubleshooting", label: "Troubleshooting" }
@@ -577,6 +578,143 @@ dashboard-web -> dashboard-api -> Postgres
 
 Private Cloud:
 same public core, customer-hosted services`),
+  "reference/plugins": {
+    slug: "reference/plugins",
+    eyebrow: "Reference",
+    title: "Plugins",
+    description: "OpenLeash features are ordered pipeline plugins. A plugin subscribes to narrow events, declares permissions and settings, uses stable capabilities, and returns typed results.",
+    body: (
+      <>
+        <section className="section first split">
+          <div>
+            <SectionTitle title="Plain Model" text="Agents emit hooks. OpenLeash normalizes them into events. The runtime runs the enabled plugins for that event in manifest order." />
+            <CodeBlock>{`agent hook
+  -> desktop local relay
+  -> client-api
+  -> OpenLeash event
+  -> ordered plugin pipeline
+  -> audit, approval, transformed prompt, or allow/deny response`}</CodeBlock>
+          </div>
+          <RuntimeScreenshot />
+        </section>
+        <section className="section">
+          <SectionTitle title="Build A Tiny Plugin" text="Start with the manifest. It is the plugin's store card, permission request, config contract, and ordering hint." />
+          <CodeBlock>{`export const manifest = {
+  id: "acme.prompt-labeler",
+  name: "Prompt Labeler",
+  version: "1.0.0",
+  publisher: "acme",
+  runtime: "node",
+  entrypoint: "src/index.ts",
+  stages: ["prompt.beforeSubmit"],
+  permissions: ["event:read", "prompt:read", "audit:write"],
+  effects: ["observe"],
+  ordering: { priority: 250, after: ["openleash.dlp"] },
+  configSchema: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      enabled: { type: "boolean" },
+      label: { type: "string" }
+    }
+  },
+  defaultConfig: { enabled: true, label: "reviewed" }
+};`}</CodeBlock>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="Implementation Shape" text="Plugins do not import OpenLeash database modules, evaluators, API handlers, or model-key readers. They receive capabilities from the runtime." />
+            <CodeBlock>{`export async function run(input, capabilities) {
+  if (!input.config.enabled) {
+    return { status: "skipped", summary: "Disabled." };
+  }
+
+  await capabilities.storage.set({
+    scope: { sessionId: input.event.sessionId },
+    key: "labels/latest",
+    value: { label: input.config.label, at: Date.now() },
+    ttlSeconds: 86400
+  });
+
+  return {
+    status: "passed",
+    summary: "Prompt labeled.",
+    findings: [{
+      title: "Prompt label",
+      severity: "info",
+      summary: input.config.label
+    }]
+  };
+}`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<ListChecks />} title="Stages" text="Use the narrowest stage: startup, agent detected, skill changed, prompt before submit, agent response, tool before/after use, session start/end." />
+            <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, tool read, model invoke, storage, audit, decision, notification, or filesystem read." />
+            <Mini icon={<Database />} title="Storage" text="Use plugin-scoped JSON storage. OpenLeash injects organization and plugin identity so plugins cannot read each other's state." />
+          </div>
+        </section>
+        <section className="section">
+          <SectionTitle title="Ordering" text="The runtime resolves before/after dependencies first, then priority. This keeps transformations and checks deterministic." />
+          <CodeBlock>{`prompt.beforeSubmit:
+openleash.prompt-compression
+  -> openleash.dlp
+  -> openleash.security-evaluator
+
+tool.beforeUse:
+openleash.security-evaluator
+  -> openleash.mcp-scanner`}</CodeBlock>
+        </section>
+        <section className="section">
+          <SectionTitle title="Settings And Rollout" text="Every plugin exposes settings through its manifest config schema. Solo users configure their own installed plugins. Organization admins choose installed plugins and defaults from the dashboard." />
+          <Checklist items={[
+            "Preinstalled OpenLeash plugins ship with the client/backend bundle",
+            "Organizations can choose which plugins employees receive",
+            "Plugin defaults come from defaultConfig",
+            "Plugin UI controls come from configSchema",
+            "Runtime capabilities enforce the permissions the manifest requested"
+          ]} />
+        </section>
+        <section className="section">
+          <SectionTitle title="Plugin Data" text="Plugins can keep state without owning a database or raw SQL access. Use scoped keys for session memory, caches, heuristics, notification dedupe, and inventory summaries." />
+          <CodeBlock>{`const scope = {
+  sessionId: input.event.sessionId,
+  conversationId: input.event.conversationId
+};
+
+const previous = await capabilities.storage.get({
+  scope,
+  key: "notifications/customer-data-risk"
+});
+
+if (!previous) {
+  await capabilities.storage.set({
+    scope,
+    key: "notifications/customer-data-risk",
+    value: { shownAt: Date.now() },
+    ttlSeconds: 5 * 60 * 60
+  });
+}`}</CodeBlock>
+        </section>
+        <section className="section">
+          <SectionTitle title="First-Party Plugins" text="These ship preinstalled today and also serve as reference implementations for plugin builders." />
+          <DecisionTable rows={[
+            ["Prompt Compression", "prompt.beforeSubmit", "Transforms prompts before DLP and policy checks."],
+            ["DLP", "prompt.beforeSubmit", "Masks or blocks sensitive data in the final prompt."],
+            ["Security Evaluator", "prompt, agent.response, tool", "Turns policy checks into allow, deny, or ask results."],
+            ["MCP Scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit and review."],
+            ["Skill Scanner", "startup, agent.detected, skill.changed", "Observes agent skills and flags suspicious instructions."]
+          ]} />
+        </section>
+        <section className="section">
+          <SectionTitle title="Source And Examples" text="Plugin examples and the preinstalled plugin repos live under the OpenLeash GitHub organization." />
+          <NextStepCards cards={[
+            ["Plugin examples", "https://github.com/open-leash/openleash-plugins", "Read the plugin contract, copy a starter, and see storage/capability examples."],
+            ["Client API source", "https://github.com/open-leash/client-api/tree/main/src/plugins", "See the runtime and first-party plugin integration."]
+          ]} />
+        </section>
+      </>
+    )
+  },
   "reference/api": referencePage("API Surfaces", "Clients and admins use different APIs.", `client-api:
 /health
 /v1/hooks/:agent/:event

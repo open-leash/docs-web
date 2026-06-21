@@ -27,6 +27,7 @@ It explains how to install, run, self-host, integrate, and reason about OpenLeas
 - Installation guides
 - OpenLeash Cloud and Private Cloud explanations
 - API contracts
+- Plugin architecture, manifests, settings, capabilities, and examples
 - Agent hook support notes
 - Mobile setup
 - Identity provider setup
