@@ -649,9 +649,44 @@ same public core, customer-hosted services`),
           </div>
           <div className="featureStack">
             <Mini icon={<ListChecks />} title="Events" text="Use the narrowest event: startup, agent detected, skill changed, prompt before submit, agent response, tool before/after use, session start/end." />
-            <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, tool read, model invoke, storage, audit, decision, notification, or filesystem read." />
+            <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, tool read, model invoke, storage, audit, log, signal, usage, decision, or notification." />
             <Mini icon={<Database />} title="Storage" text="Use plugin-scoped JSON storage. OpenLeash injects organization and plugin identity so plugins cannot read each other's state." />
           </div>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="Signals And Usage" text="Plugins report normalized facts to OpenLeash. They do not write database rows or build their own reporting backend." />
+            <CodeBlock>{`await capabilities.signals.emit({
+  kind: "security.finding",
+  severity: "high",
+  title: "Destructive command blocked",
+  decision: "blocked",
+  status: "contained",
+  correlationKeys: ["policy:prod-safety"]
+});
+
+await capabilities.usage.record({
+  kind: "llm.tokens",
+  provider: "openleash-evaluator",
+  inputTokens: 4200,
+  savedTokens: 1600,
+  estimatedCostUsd: 0.018
+});`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<ShieldAlert />} title="CISO View" text="The dashboard reads OpenLeash-owned signal records to show incidents, findings, affected employees, contained actions, and plugin sources." />
+            <Mini icon={<Gauge />} title="Cost View" text="Usage records power plugin and employee cost summaries without exposing provider keys or raw database access to plugins." />
+            <Mini icon={<UsersRound />} title="Identity" text="OpenLeash stamps organization, synced user, computer, runtime, and conversation context. Plugins cannot spoof those trusted fields." />
+          </div>
+        </section>
+        <section className="section">
+          <SectionTitle title="Correlation" text="General dashboards correlate plugin output through OpenLeash-owned context, not plugin-to-plugin database reads." />
+          <DecisionTable rows={[
+            ["Same user", "IdP-synced user id", "Show incidents, usage, and risky actions for one employee."],
+            ["Same conversation", "conversation_event_id", "Connect prompt, tool, DLP, MCP, and security evaluator records."],
+            ["Same device/runtime", "computer_id and agent_runtime_id", "Spot endpoint-specific agent behavior."],
+            ["Explicit pattern", "correlationKeys", "Let plugins add safe keys such as policy ids, secret categories, tools, or command classes."]
+          ]} />
         </section>
         <section className="section">
           <SectionTitle title="Ordering" text="The runtime resolves before/after dependencies first, then priority. This keeps transformations and checks deterministic." />
@@ -675,7 +710,7 @@ openleash.security-evaluator
           ]} />
         </section>
         <section className="section">
-          <SectionTitle title="Plugin Data" text="Plugins can keep state without owning a database or raw SQL access. Use scoped keys for session memory, caches, heuristics, notification dedupe, and inventory summaries." />
+          <SectionTitle title="Plugin Data" text="Plugins can keep private state without owning a database or raw SQL access. Use scoped storage for session memory, caches, heuristics, and notification dedupe." />
           <CodeBlock>{`const scope = {
   sessionId: input.event.sessionId,
   conversationId: input.event.conversationId
@@ -698,11 +733,11 @@ if (!previous) {
         <section className="section">
           <SectionTitle title="First-Party Plugins" text="These ship preinstalled today and also serve as reference implementations for plugin builders." />
           <DecisionTable rows={[
-            ["Prompt Compression", "prompt.beforeSubmit", "Transforms prompts before DLP and policy checks."],
-            ["DLP", "prompt.beforeSubmit", "Masks or blocks sensitive data in the final prompt."],
-            ["Security Evaluator", "prompt, agent.response, tool", "Turns policy checks into allow, deny, or ask results."],
-            ["MCP Scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit and review."],
-            ["Skill Scanner", "startup, agent.detected, skill.changed", "Observes agent skills and flags suspicious instructions."]
+            ["openleash.prompt-compression", "prompt.beforeSubmit", "Transforms prompts before DLP and policy checks, then reports token savings."],
+            ["openleash.dlp", "prompt.beforeSubmit", "Masks or blocks sensitive data and emits secret detection signals."],
+            ["openleash.security-evaluator", "prompt, agent.response, tool", "Turns policy checks into allow, deny, or ask results and emits security findings."],
+            ["openleash.mcp-scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit, review, and dashboard correlation."],
+            ["openleash.skill-scanner", "startup, agent.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."]
           ]} />
         </section>
         <section className="section">
