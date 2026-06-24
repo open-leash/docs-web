@@ -22,14 +22,15 @@ import {
   ShieldAlert,
   ShieldCheck,
   Smartphone,
+  Star,
   TerminalSquare,
   UsersRound,
   WandSparkles
 } from "lucide-react";
+import { absoluteDocsUrl, docsDescription, docsTitle, docsUrl } from "./seo";
 
-const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost:9300";
+const mainSiteUrl = (process.env.NEXT_PUBLIC_MAIN_SITE_URL ?? "https://openleash.com").replace(/\/+$/, "");
 const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/open-leash";
-const signInHref = `${dashboardUrl.replace(/\/+$/, "")}/auth/cloud/start`;
 
 type NavGroup = {
   title: string;
@@ -142,6 +143,29 @@ const audienceCards = [
   }
 ];
 
+function MarketingNav() {
+  return (
+    <header className="marketingNav sticky">
+      <a href={mainSiteUrl} className="marketingBrand">
+        <img className="marketingBrandIcon" src="/verysmall.png" alt="" />
+        <span>OpenLeash</span>
+      </a>
+      <nav className="marketingLinks">
+        <a href={`${mainSiteUrl}/plugins`}>Plugins</a>
+        <a href={`${mainSiteUrl}/blog`}>Blog</a>
+        <a className="active" href="/">Docs</a>
+        <a href={`${mainSiteUrl}/#pricing`}>Pricing</a>
+        <a href={githubUrl} target="_blank" rel="noreferrer" aria-label="OpenLeash on GitHub">
+          <Github size={15} />
+          <Star className="githubStar" size={14} strokeWidth={2.2} />
+          <span>6</span>
+        </a>
+        <a className="dark" href={`${mainSiteUrl}/account`}>Sign in</a>
+      </nav>
+    </header>
+  );
+}
+
 export function DocsLayout({ activePath, children }: { activePath: string; children: ReactNode }) {
   const navItems = navGroups.flatMap((group) => group.items);
   const currentPage =
@@ -163,12 +187,14 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
   );
 
   return (
+    <>
+    <MarketingNav />
     <main className="docsShell">
       <aside className="side">
         <details className="mobileNav">
           <summary>
             <span className="mobileBrand">
-              <img className="mark" src="/openleash-icon.png" alt="" />
+              <img className="mark" src="/verysmall.png" alt="" />
               <span>
                 <strong>OpenLeash</strong>
                 <em>{currentPage?.label ?? "Docs"}</em>
@@ -183,7 +209,7 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
         </details>
         <div className="sideInner">
           <a className="brand" href="/">
-            <img className="mark" src="/openleash-icon.png" alt="" />
+            <img className="mark" src="/verysmall.png" alt="" />
             <span>
               <strong>OpenLeash</strong>
               <em>{currentPage?.label ?? "Docs"}</em>
@@ -198,19 +224,26 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
       </aside>
 
       <section className="content">
-        <header className="top">
-          <a href={githubUrl}>GitHub</a>
-          <a className="button" href={signInHref}>Open Cloud <ArrowRight size={15} /></a>
-        </header>
         {children}
       </section>
     </main>
+    </>
   );
 }
 
 export function HomePage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: docsTitle,
+    url: docsUrl,
+    description: docsDescription,
+    publisher: { "@type": "Organization", name: "OpenLeash", url: mainSiteUrl }
+  };
+
   return (
     <DocsLayout activePath="/">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero
         eyebrow="Start here"
         title="AI agents move fast. OpenLeash adds judgment."
@@ -795,8 +828,21 @@ pages["features/mobile"] = pages["clients/mobile-client"];
 pages["features/approvals"] = pages["features/action-protection"];
 
 export function RenderDocPage({ page, activePath }: { page: DocPage; activePath: string }) {
+  const canonicalPath = page.slug !== activePath && pages[page.slug] ? page.slug : activePath;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: page.title,
+    description: page.description,
+    url: absoluteDocsUrl(`/${canonicalPath}`),
+    articleSection: page.eyebrow,
+    author: { "@type": "Organization", name: "OpenLeash", url: mainSiteUrl },
+    publisher: { "@type": "Organization", name: "OpenLeash", url: mainSiteUrl }
+  };
+
   return (
     <DocsLayout activePath={`/${activePath}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero eyebrow={page.eyebrow} title={page.title} description={page.description} />
       {page.body}
     </DocsLayout>

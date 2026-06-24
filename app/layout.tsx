@@ -1,21 +1,28 @@
 import type { Metadata } from "next";
 import "./styles.css";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:9306";
+import { docsDescription, docsOgImage, docsTitle, docsUrl } from "./seo";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(docsUrl),
   title: {
-    default: "OpenLeash Docs",
+    default: docsTitle,
     template: "%s - OpenLeash Docs"
   },
-  description: "Install, configure, and operate OpenLeash for AI agents.",
+  description: docsDescription,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "OpenLeash Docs",
-    description: "Documentation for the open-source control plane for AI agents.",
-    url: siteUrl,
-    siteName: "OpenLeash Docs",
-    type: "website"
+    title: docsTitle,
+    description: docsDescription,
+    url: docsUrl,
+    siteName: docsTitle,
+    type: "website",
+    images: [{ url: docsOgImage, width: 512, height: 512, alt: "OpenLeash Docs" }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: docsTitle,
+    description: docsDescription,
+    images: [docsOgImage]
   },
   robots: {
     index: true,

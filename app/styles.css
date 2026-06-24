@@ -20,12 +20,78 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--s
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 img, svg { max-width: 100%; }
+.marketingNav {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 18px 34px;
+  background: rgba(243,245,233,.92);
+  border-bottom: 1px solid #e2e3d6;
+  backdrop-filter: blur(12px);
+}
+.marketingNav.sticky {
+  position: sticky;
+  top: 0;
+  max-width: none;
+}
+.marketingBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #16160f;
+  font-size: 21px;
+  font-weight: 700;
+}
+.marketingBrandIcon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+.marketingLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.marketingLinks a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 39px;
+  padding: 9px 15px;
+  border: 1px solid #e2e3d6;
+  border-radius: 11px;
+  background: #fff;
+  color: #33332a;
+  font-size: 14px;
+  font-weight: 600;
+}
+.marketingLinks a.active {
+  border-color: #d5cffe;
+  background: #eceafc;
+  color: #6d5ef5;
+}
+.marketingLinks a.dark {
+  border-color: #16160f;
+  background: #16160f;
+  color: #fcfdf7;
+}
+.githubStar {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  margin-left: -2px;
+}
 .docsShell { display: grid; grid-template-columns: 292px minmax(0, 1fr); min-height: 100vh; }
 
 .side {
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: 76px;
+  height: calc(100vh - 76px);
   overflow: auto;
   border-right: 1px solid var(--line);
   background: rgba(251, 250, 246, .94);
@@ -307,11 +373,18 @@ h1 { max-width: 900px; margin: 24px 0 17px; font-size: 68px; font-weight: 500; l
   .journeyStrip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 840px) {
+  .marketingNav {
+    padding: 14px 18px;
+    gap: 12px;
+  }
+  .marketingLinks a:not(.dark) {
+    display: none;
+  }
   .docsShell { grid-template-columns: 1fr; }
   .side {
     position: sticky;
     z-index: 20;
-    top: 0;
+    top: 68px;
     height: auto;
     overflow: hidden;
     border-right: 0;
