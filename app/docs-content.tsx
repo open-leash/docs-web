@@ -716,7 +716,7 @@ await capabilities.usage.record({
           <SectionTitle title="Correlation" text="General dashboards correlate plugin output through OpenLeash-owned context, not plugin-to-plugin database reads." />
           <DecisionTable rows={[
             ["Same user", "IdP-synced user id", "Show incidents, usage, and risky actions for one employee."],
-            ["Same conversation", "conversation_event_id", "Connect prompt, tool, DLP, MCP, and security evaluator records."],
+            ["Same conversation", "conversation_event_id", "Connect prompt, tool, data protection, MCP, and rules-enforcer records."],
             ["Same device/runtime", "computer_id and agent_runtime_id", "Spot endpoint-specific agent behavior."],
             ["Explicit pattern", "correlationKeys", "Let plugins add safe keys such as policy ids, secret categories, tools, or command classes."]
           ]} />
@@ -726,10 +726,12 @@ await capabilities.usage.record({
           <CodeBlock>{`prompt.beforeSubmit:
 openleash.prompt-compression
   -> openleash.dlp
-  -> openleash.security-evaluator
+  -> openleash.sensitive-access
 
 tool.beforeUse:
-openleash.security-evaluator
+openleash.sensitive-access
+  -> openleash.blast-radius
+  -> openleash.rules-enforcer
   -> openleash.mcp-scanner`}</CodeBlock>
         </section>
         <section className="section">
@@ -739,7 +741,7 @@ openleash.security-evaluator
             "Organizations can choose which plugins employees receive",
             "Plugin defaults come from defaultConfig",
             "Plugin UI controls come from configSchema",
-            "Runtime capabilities enforce the permissions the manifest requested"
+            "Runtime capabilities provide primitive services while plugin code owns its detection logic"
           ]} />
         </section>
         <section className="section">
@@ -766,17 +768,20 @@ if (!previous) {
         <section className="section">
           <SectionTitle title="First-Party Plugins" text="These ship preinstalled today and also serve as reference implementations for plugin builders." />
           <DecisionTable rows={[
-            ["openleash.prompt-compression", "prompt.beforeSubmit", "Transforms prompts before DLP and policy checks, then reports token savings."],
-            ["openleash.dlp", "prompt.beforeSubmit", "Masks or blocks sensitive data and emits secret detection signals."],
-            ["openleash.security-evaluator", "prompt, agent.response, tool", "Turns policy checks into allow, deny, or ask results and emits security findings."],
+            ["openleash.prompt-compression", "prompt.beforeSubmit", "Token-saver rewrites noisy prompts with its own prompt/schema and reports savings."],
+            ["openleash.dlp", "prompt.beforeSubmit", "Data-leakage-prevention owns masking/detection logic and emits secret detection signals."],
+            ["openleash.sensitive-access", "prompt, response, tool", "Catches env-file reads, secret exposure, env dumps, and exfiltration attempts."],
+            ["openleash.blast-radius", "tool.beforeUse", "Guards destructive tools and broad data operations."],
+            ["openleash.rules-enforcer", "prompt, agent.response, tool", "Evaluates natural-language rules with plugin-owned prompts and emits security findings."],
             ["openleash.mcp-scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit, review, and dashboard correlation."],
-            ["openleash.skill-scanner", "startup, agent.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."]
+            ["openleash.skill-scanner", "startup, agent.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."],
+            ["openleash.siem-exporter", "security, log, outcome", "Exports events and plugin logs to configured SIEM targets."]
           ]} />
         </section>
         <section className="section">
           <SectionTitle title="Source And Examples" text="Plugin examples and the preinstalled plugin repos live under the OpenLeash GitHub organization." />
           <NextStepCards cards={[
-            ["Plugin examples", "https://github.com/open-leash/plugins", "Read the plugin contract, copy a starter, and see storage/capability examples."],
+            ["First-party plugin repos", "https://github.com/open-leash?q=plugin-", "Read the public plugin-* repositories, each with its own icon, source, manifest, prompts, and parser logic."],
             ["Client API source", "https://github.com/open-leash/client-api/tree/main/src/plugins", "See the runtime and first-party plugin integration."]
           ]} />
         </section>
@@ -1161,7 +1166,7 @@ function SecretScreenshot() {
 }
 
 function CompressionScreenshot() {
-  return <CardShot icon={<WandSparkles />} title="Prompt transform" rows={["Compression enabled", "DLP checks enabled", "Model: BYOK provider"]} />;
+  return <CardShot icon={<WandSparkles />} title="Prompt plugins" rows={["token-saver enabled", "data-leakage-prevention enabled", "Model: BYOK provider"]} />;
 }
 
 function IdentityScreenshot() {
