@@ -774,7 +774,7 @@ if (!previous) {
             ["openleash.blast-radius", "tool.beforeUse", "Guards destructive tools and broad data operations."],
             ["openleash.rules-enforcer", "prompt, agent.response, tool", "Evaluates natural-language rules with plugin-owned prompts and emits security findings."],
             ["openleash.mcp-scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit, review, and dashboard correlation."],
-            ["openleash.skill-scanner", "startup, agent.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."],
+            ["openleash.skill-scanner", "startup, agent.detected, skill.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."],
             ["openleash.siem-exporter", "security, log, outcome", "Exports events and plugin logs to configured SIEM targets."]
           ]} />
         </section>
