@@ -47,52 +47,30 @@ export type DocPage = {
 
 export const navGroups: NavGroup[] = [
   {
-    title: "Start",
+    title: "GETTING STARTED",
     items: [
-      { href: "/", label: "What Is OpenLeash?" },
-      { href: "/getting-started", label: "Pick Your Path" },
-      { href: "/getting-started/individual", label: "I'm an Individual" },
-      { href: "/getting-started/organization", label: "I'm an Organization" },
-      { href: "/getting-started/openleash-cloud", label: "OpenLeash Cloud" },
-      { href: "/getting-started/private-cloud", label: "Private Cloud" }
+      { href: "/", label: "What is OpenLeash?" },
+      { href: "/", label: "Quickstart" },
+      { href: "/getting-started", label: "Configuration" },
+      { href: "/clients/desktop-client", label: "The cockpit" }
     ]
   },
   {
-    title: "Clients",
+    title: "BUILDING PLUGINS",
     items: [
-      { href: "/clients/desktop-client", label: "Desktop Client" },
-      { href: "/clients/mobile-client", label: "Mobile Client" },
-      { href: "/clients/dashboard", label: "Dashboard for CISOs" }
+      { href: "/reference/plugins", label: "Your first plugin" },
+      { href: "/reference/api", label: "Events reference" },
+      { href: "/reference/api", label: "Capabilities API" },
+      { href: "/reference/plugins", label: "Publishing" }
     ]
   },
   {
-    title: "Protections",
+    title: "OPERATIONS",
     items: [
-      { href: "/features/action-protection", label: "Action Protection" },
-      { href: "/features/secret-protection", label: "Secret Protection" },
-      { href: "/features/policies", label: "Policies" },
-      { href: "/features/prompt-compression", label: "Prompt Compression" }
-    ]
-  },
-  {
-    title: "Admin & Deploy",
-    items: [
-      { href: "/features/identity", label: "Identity & Users" },
-      { href: "/features/audit-log", label: "Audit Log" },
-      { href: "/features/usage", label: "Provider Usage" },
-      { href: "/deployment/openleash-cloud", label: "Cloud Rollout" },
-      { href: "/deployment/private-cloud", label: "Private Cloud Rollout" },
-      { href: "/deployment/self-hosted", label: "Self-Hosted Ops" }
-    ]
-  },
-  {
-    title: "Reference",
-    items: [
-      { href: "/reference/architecture", label: "Architecture" },
-      { href: "/reference/plugins", label: "Plugins" },
-      { href: "/reference/api", label: "API Surfaces" },
-      { href: "/reference/migrations", label: "Migrations" },
-      { href: "/reference/troubleshooting", label: "Troubleshooting" }
+      { href: "/deployment/self-hosted", label: "Self-hosting" },
+      { href: "/features/audit-log", label: "SIEM export" },
+      { href: "/features/identity", label: "Team management" },
+      { href: "/reference/troubleshooting", label: "CLI reference" }
     ]
   }
 ];
@@ -147,20 +125,18 @@ function MarketingNav() {
   return (
     <header className="marketingNav sticky">
       <a href={mainSiteUrl} className="marketingBrand">
-        <img className="marketingBrandIcon" src="/verysmall.png" alt="" />
+        <span className="marketingBrandIcon" aria-hidden="true">🐾</span>
         <span>OpenLeash</span>
       </a>
       <nav className="marketingLinks">
-        <a href={`${mainSiteUrl}/plugins`}>Plugins</a>
-        <a href={`${mainSiteUrl}/blog`}>Blog</a>
-        <a className="active" href="/">Docs</a>
-        <a href={`${mainSiteUrl}/#pricing`}>Pricing</a>
+        <a href={`${mainSiteUrl}/plugins`}>🧩 Plugins</a>
+        <a className="active" href="/">📚 Docs</a>
+        <a href={`${mainSiteUrl}/blog`}>✍️ Blog</a>
+        <a href={`${mainSiteUrl}/pricing`}>💸 Pricing</a>
         <a href={githubUrl} target="_blank" rel="noreferrer" aria-label="OpenLeash on GitHub">
-          <Github size={15} />
-          <Star className="githubStar" size={14} strokeWidth={2.2} />
-          <span>6</span>
+          <span>⭐ 4.2k</span>
         </a>
-        <a className="dark" href={`${mainSiteUrl}/account`}>Sign in</a>
+        <a className="dark" href={`${mainSiteUrl}/account`}>Start free</a>
       </nav>
     </header>
   );
@@ -177,7 +153,7 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
         <section key={group.title}>
           <h2>{group.title}</h2>
           {group.items.map((item) => (
-            <a className={isActive(activePath, item.href) ? "active" : ""} href={item.href} key={item.href}>
+            <a className={navItemActive(activePath, item) ? "active" : ""} href={item.href} key={`${item.href}-${item.label}`}>
               {item.label}
             </a>
           ))}
@@ -194,7 +170,7 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
         <details className="mobileNav">
           <summary>
             <span className="mobileBrand">
-              <img className="mark" src="/verysmall.png" alt="" />
+              <span className="mark" aria-hidden="true">🐾</span>
               <span>
                 <strong>OpenLeash</strong>
                 <em>{currentPage?.label ?? "Docs"}</em>
@@ -209,7 +185,7 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
         </details>
         <div className="sideInner">
           <a className="brand" href="/">
-            <img className="mark" src="/verysmall.png" alt="" />
+            <span className="mark" aria-hidden="true">🐾</span>
             <span>
               <strong>OpenLeash</strong>
               <em>{currentPage?.label ?? "Docs"}</em>
@@ -227,6 +203,19 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
         {children}
       </section>
     </main>
+    <footer className="docsFooter">
+      <span>🐾 OpenLeash · MIT licensed · Open registry</span>
+      <nav>
+        <a href={`${mainSiteUrl}/blog`}>Blog</a>
+        <a href={`${mainSiteUrl}/pricing`}>Pricing</a>
+        <a href={githubUrl}>GitHub</a>
+        <a href="https://x.com/openleash">X</a>
+        <a href="https://www.linkedin.com/company/openleash">LinkedIn</a>
+        <a href={`${mainSiteUrl}/terms`}>Terms of service</a>
+        <a href={`${mainSiteUrl}/privacy`}>Privacy policy</a>
+        <a href={`${mainSiteUrl}/support`}>Support</a>
+      </nav>
+    </footer>
     </>
   );
 }
@@ -244,36 +233,45 @@ export function HomePage() {
   return (
     <DocsLayout activePath="/">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero
-        eyebrow="Start here"
-        title="AI agents move fast. OpenLeash adds judgment."
-        description="OpenLeash sits beside your agents and watches the moments that matter: secrets, shell commands, file access, deploys, and other risky actions. You start simple, then add cloud, teams, identity, and audit only when you need them 🙂"
-        primary={{ href: "/getting-started", label: "Choose your setup" }}
-      />
-
-      <section className="section">
-        <SectionTitle title="The Plain Version" text="Your agent asks to do something. OpenLeash checks the risk. Safe work continues; sensitive work gets blocked, masked, or sent for approval." />
-        <div className="featureGrid">
-          <Mini icon={<ShieldCheck />} title="Protect actions" text="Hold destructive commands, production deploys, force pushes, and sensitive file reads." />
-          <Mini icon={<KeyRound />} title="Protect secrets" text="Catch keys, tokens, .env files, kubeconfigs, and other sensitive context before they leak." />
-          <Mini icon={<ScrollText />} title="Remember what happened" text="Keep a readable trail of the agent, user, action, decision, and reason." />
+      <section className="docsQuickstart">
+        <div className="docsCrumbs">
+          <span>Docs</span><span>›</span><span>Getting started</span><span>›</span><strong>Quickstart</strong>
         </div>
-      </section>
+        <h1>Quickstart</h1>
+        <p className="docsLead">Get from zero to a leashed agent in about 30 seconds. OpenLeash runs entirely on your machine - nothing here requires an account.</p>
 
-      <section className="section">
-        <SectionTitle title="Start From Who You Are" text="No maze. Pick the card that sounds like you." />
-        <SetupGrid />
-      </section>
+        <h2>1. Install</h2>
+        <InstallCommand command="curl -fsSL openleash.com/install.sh | sh" copyLabel="Copy" />
+        <p>On macOS you can also <code>brew install openleash</code>. Windows, Linux, iOS and Android builds are coming - Docker and Cloud are available today.</p>
 
-      <section className="section split">
-        <div>
-          <SectionTitle title="One Idea To Remember" text="Hooks call the desktop client first. The desktop is a local relay; policy, plugins, approvals, audit, and evaluation come from the configured backend." />
-          <CodeBlock>{`Installed hooks -> Desktop local API
-http://127.0.0.1:9317/v1/hooks/:agent/:event
+        <h2>2. Let it find your agents</h2>
+        <p>The installer detects Claude Code, Codex, Cursor, and any MCP-speaking agent on your machine and hooks in automatically. Check what it found:</p>
+        <CodeBlock>{`$ openleash status
+✓ claude-code   leashed  (3 plugins active)
+✓ cursor        leashed  (3 plugins active)
+✓ codex         leashed  (3 plugins active)`}</CodeBlock>
 
-desktop-client -> local API -> client-api`}</CodeBlock>
+        <h2>3. Add your first plugins</h2>
+        <p>The starter set covers the three things everyone wants first - not deleting prod, not leaking keys, and not burning tokens:</p>
+        <CodeBlock>{`$ openleash install blast-radius data-leakage-prevention token-saver`}</CodeBlock>
+        <p>Browse the full registry in the <a href={`${mainSiteUrl}/plugins`}>plugin catalog</a> - 43 plugins across security, cost, and visibility.</p>
+
+        <h2>4. Watch it work</h2>
+        <p>Open the cockpit to see live agent activity, blocked commands, and token savings:</p>
+        <CodeBlock>{`$ openleash cockpit
+→ http://localhost:4242`}</CodeBlock>
+
+        <div className="docsNextBox">
+          <strong>Next steps</strong>
+          <a href="/reference/plugins">→ Write your first plugin - a manifest, an event, a run(). ~80 lines.</a>
+          <a href="/reference/api">→ Events reference - all 12 hooks, payloads, and return types.</a>
+          <a href="/deployment/self-hosted">→ Self-hosting - Docker compose, air-gapped installs, SIEM export.</a>
         </div>
-        <RuntimeScreenshot />
+
+        <div className="docsPager">
+          <a href="/">← What is OpenLeash?</a>
+          <a href="/getting-started">Configuration →</a>
+        </div>
       </section>
     </DocsLayout>
   );
@@ -1043,6 +1041,16 @@ function CodeBlock({ children }: { children: string }) {
   return <pre className="codeBlock">{children}</pre>;
 }
 
+function InstallCommand({ command, copyLabel }: { command: string; copyLabel: string }) {
+  return (
+    <div className="installCommand">
+      <span>$</span>
+      <code>{command}</code>
+      <button type="button">{copyLabel}</button>
+    </div>
+  );
+}
+
 function Notice({ title, text }: { title: string; text: string }) {
   return <div className="notice"><strong>{title}</strong><p>{text}</p></div>;
 }
@@ -1202,4 +1210,9 @@ function CardShot({ icon, title, rows }: { icon: ReactNode; title: string; rows:
 function isActive(activePath: string, href: string) {
   if (href === "/") return activePath === "/";
   return activePath === href || activePath.startsWith(`${href}/`);
+}
+
+function navItemActive(activePath: string, item: { href: string; label: string }) {
+  if (activePath === "/" && item.href === "/") return item.label === "Quickstart";
+  return isActive(activePath, item.href);
 }

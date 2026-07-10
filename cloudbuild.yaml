@@ -3,7 +3,7 @@ substitutions:
 
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-f", "apps/docs-web/Dockerfile", "-t", "${_IMAGE}", "."]
+    args: ["build", "-t", "${_IMAGE}", "."]
 
 images:
   - "${_IMAGE}"
