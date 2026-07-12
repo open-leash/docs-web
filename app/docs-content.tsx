@@ -541,7 +541,7 @@ OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
     ["Prompt masking", "Mask or hold prompts with keys, tokens, PII, PHI, or credentials."],
     ["Commit safety", "Require approval before suspicious staged content is committed."]
   ]),
-  "features/prompt-compression": featurePage("Prompt Compression", "Shrink large prompts while keeping task intent and important context.", <CompressionScreenshot />, [
+  "features/prompt-compression": featurePage("token-saver", "Shrink large prompts while keeping task intent and important context.", <CompressionScreenshot />, [
     ["Cost control", "Lower token usage before sending context to model-backed checks."],
     ["Policy aware", "Compression can run alongside DLP and approval policies."],
     ["BYOK friendly", "Use customer-provided model keys when teams bring their own provider."]
