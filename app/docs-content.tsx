@@ -383,7 +383,7 @@ export const pages: Record<string, DocPage> = {
               "Install hooks against the local client-api and manage plugins locally."
             ]} />
           </div>
-          <DesktopScreenshot />
+          <DesktopScreenshot mode="open-source" />
         </section>
         <section className="section">
           <SectionTitle title="Install" text="The release pins the backend image by version and immutable digest, runs migrations, seeds the single local account, and launches desktop." />
@@ -1194,15 +1194,16 @@ function DecisionTable({ rows }: { rows: Array<[string, string, string]> }) {
   );
 }
 
-function DesktopScreenshot() {
+function DesktopScreenshot({ mode = "cloud" }: { mode?: "cloud" | "open-source" }) {
+  const openSource = mode === "open-source";
   return (
     <div className="screenshot desktopShot">
       <div className="windowBar"><span /><span /><span /></div>
       <div className="shotTitle"><Laptop size={18} /> OpenLeash Desktop</div>
-      <div className="modeRow"><button>Open Source</button><button className="active">Personal Cloud</button></div>
-      <div className="field"><span>Backend</span><strong>api.openleash.com</strong></div>
+      <div className="modeRow"><button className={openSource ? "active" : undefined}>Open Source</button><button className={openSource ? undefined : "active"}>Personal Cloud</button></div>
+      <div className="field"><span>Backend</span><strong>{openSource ? "127.0.0.1:9318" : "api.openleash.com"}</strong></div>
       <div className="field"><span>Hooks</span><strong>Claude, Codex, Cursor, Gemini, OpenCode, OpenClaw, NanoClaw</strong></div>
-      <div className="status good"><Check size={15} /> Cloud backend connected · local plugin edge ready</div>
+      <div className="status good"><Check size={15} /> {openSource ? "Local client-api + Postgres connected" : "Cloud backend connected · local plugin edge ready"}</div>
     </div>
   );
 }
