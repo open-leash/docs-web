@@ -52,6 +52,9 @@ export const navGroups: NavGroup[] = [
       { href: "/", label: "What is OpenLeash?" },
       { href: "/", label: "Quickstart" },
       { href: "/getting-started", label: "Configuration" },
+      { href: "/getting-started/individual-open-source", label: "Individual Open Source" },
+      { href: "/getting-started/openleash-cloud", label: "OpenLeash Cloud" },
+      { href: "/getting-started/private-cloud", label: "Private Cloud" },
       { href: "/clients/desktop-client", label: "The cockpit" }
     ]
   },
@@ -61,6 +64,7 @@ export const navGroups: NavGroup[] = [
       { href: "/reference/plugins", label: "Your first plugin" },
       { href: "/reference/api", label: "Events reference" },
       { href: "/reference/api", label: "Capabilities API" },
+      { href: "/reference/plugins", label: "Settings and Island UI" },
       { href: "/reference/plugins", label: "Publishing" }
     ]
   },
@@ -76,6 +80,14 @@ export const navGroups: NavGroup[] = [
 ];
 
 const setupCards = [
+  {
+    href: "/getting-started/individual-open-source",
+    icon: TerminalSquare,
+    label: "Individual",
+    title: "Individual Open Source",
+    copy: "I want the real OpenLeash backend and Postgres on my own machine, without a cloud account.",
+    bullets: ["Local client-api + Postgres", "Bring your own LLM key", "No cloud sign-in"]
+  },
   {
     href: "/getting-started/openleash-cloud",
     icon: Cloud,
@@ -108,8 +120,8 @@ const audienceCards = [
     icon: Laptop,
     label: "Individual",
     title: "I'm protecting my own agents",
-    copy: "Start with the desktop client and connect it to OpenLeash Cloud. Solo users stay out of the dashboard.",
-    bullets: ["No company setup", "No CISO dashboard", "Personal cloud"]
+    copy: "Start with the desktop client, then choose personal OpenLeash Cloud or Individual Open Source. Solo users stay out of the dashboard.",
+    bullets: ["No company setup", "No CISO dashboard", "Hosted or local backend"]
   },
   {
     href: "/getting-started/organization",
@@ -238,28 +250,34 @@ export function HomePage() {
           <span>Docs</span><span>›</span><span>Getting started</span><span>›</span><strong>Quickstart</strong>
         </div>
         <h1>Quickstart</h1>
-        <p className="docsLead">Get from zero to a leashed agent in about 30 seconds. OpenLeash runs entirely on your machine - nothing here requires an account.</p>
+        <p className="docsLead">Get from zero to a leashed agent in about 30 seconds. Install the desktop client, then use personal OpenLeash Cloud or run the real open-source backend and Postgres locally.</p>
 
         <h2>1. Install</h2>
-        <InstallCommand command="curl -fsSL openleash.com/install.sh | sh" copyLabel="Copy" />
-        <p>On macOS you can also <code>brew install openleash</code>. Windows, Linux, iOS and Android builds are coming - Docker and Cloud are available today.</p>
+        <InstallCommand command="curl -fsSL https://openleash.com/install.sh | sh" copyLabel="Copy" />
+        <p>The default installer opens setup so you can choose personal OpenLeash Cloud, an organization, or Individual Open Source. To bootstrap the local open-source backend immediately, append <code>-- --open-source</code>. Windows, Linux, iOS and Android builds are coming.</p>
 
-        <h2>2. Let it find your agents</h2>
-        <p>The installer detects Claude Code, Codex, Cursor, and any MCP-speaking agent on your machine and hooks in automatically. Check what it found:</p>
+        <h2>2. Choose the backend</h2>
+        <p>OpenLeash desktop is always backend-backed. Personal Cloud keeps your account and plugin configuration hosted; Individual Open Source starts the same public <code>client-api</code> and Postgres locally with Docker.</p>
+        <CodeBlock>{`Hosted personal setup:
+OpenLeash -> Personal -> sign in
+
+Local open-source setup:
+curl -fsSL https://openleash.com/install.sh | sh -s -- --open-source`}</CodeBlock>
+
+        <h2>3. Find and leash your agents</h2>
+        <p>OpenLeash detects supported agents such as Claude Code, Codex, Cursor, Gemini CLI, OpenCode, Copilot, Windsurf, and Cline. Install their hooks from the desktop or CLI, then verify what is protected:</p>
         <CodeBlock>{`$ openleash status
 ✓ claude-code   leashed  (3 plugins active)
 ✓ cursor        leashed  (3 plugins active)
 ✓ codex         leashed  (3 plugins active)`}</CodeBlock>
 
-        <h2>3. Add your first plugins</h2>
+        <h2>4. Add your first plugins</h2>
         <p>The starter set covers the three things everyone wants first - not deleting prod, not leaking keys, and not burning tokens:</p>
-        <CodeBlock>{`$ openleash install blast-radius data-leakage-prevention token-saver`}</CodeBlock>
-        <p>Browse the full registry in the <a href={`${mainSiteUrl}/plugins`}>plugin catalog</a> - 43 plugins across security, cost, and visibility.</p>
+        <CodeBlock>{`$ openleash plugins install blast-radius data-leakage-prevention token-saver`}</CodeBlock>
+        <p>Browse the current registry in the <a href={`${mainSiteUrl}/plugins`}>plugin catalog</a> - 9 plugins across security, cost, and visibility.</p>
 
-        <h2>4. Watch it work</h2>
-        <p>Open the cockpit to see live agent activity, blocked commands, and token savings:</p>
-        <CodeBlock>{`$ openleash cockpit
-→ http://localhost:4242`}</CodeBlock>
+        <h2>5. Watch it work</h2>
+        <p>The OpenLeash Island shows live sessions, approvals, blocked actions, completion notices, and bounded plugin-contributed status. Open the main window for plugin settings, outcomes, and history.</p>
 
         <div className="docsNextBox">
           <strong>Next steps</strong>
@@ -290,12 +308,13 @@ export const pages: Record<string, DocPage> = {
           <AudienceGrid />
         </section>
         <section className="section">
-          <SectionTitle title="Already Know The Mode?" text="OpenLeash has two backend-backed modes: OpenLeash Cloud and Private Cloud." />
+          <SectionTitle title="Already Know The Mode?" text="OpenLeash has three backend-backed modes: Individual Open Source, OpenLeash Cloud, and Private Cloud." />
           <SetupGrid />
         </section>
         <section className="section">
           <SectionTitle title="Quick Decision" text="Read this like a normal person in a hurry." />
           <DecisionTable rows={[
+            ["Just me, fully local", "Individual Open Source", "Run the real client-api and Postgres locally. No OpenLeash Cloud account."],
             ["Just me", "OpenLeash Cloud", "Create a personal account where you started. Still no dashboard."],
             ["My company", "OpenLeash Cloud", "Use work identity, then configure users and policy in the dashboard."],
             ["My company hosts it", "Private Cloud", "Run the public core in your own environment."]
@@ -304,7 +323,7 @@ export const pages: Record<string, DocPage> = {
         <section className="section">
           <SectionTitle title="Next Step" text="Choose the full journey that matches you." />
           <NextStepCards cards={[
-            ["I'm an individual", "/getting-started/individual", "Install desktop, connect OpenLeash Cloud, and protect your own agents."],
+            ["I'm an individual", "/getting-started/individual", "Choose a hosted personal account or a local open-source backend."],
             ["I'm an organization", "/getting-started/organization", "Connect identity, configure policy, and roll OpenLeash out to your team."]
           ]} />
         </section>
@@ -315,7 +334,7 @@ export const pages: Record<string, DocPage> = {
     slug: "getting-started/individual",
     eyebrow: "Individual",
     title: "You want protection without admin homework.",
-    description: "Start with the desktop client and connect to OpenLeash Cloud. Solo users never go to the dashboard.",
+    description: "Start with the desktop client, then choose personal OpenLeash Cloud or Individual Open Source. Solo users never go to the dashboard.",
     body: (
       <>
         <section className="section first split">
@@ -324,8 +343,8 @@ export const pages: Record<string, DocPage> = {
             <SectionTitle title="Your Simple Path" text="You are not setting policy for a company. You are protecting your own agents." />
             <StepList steps={[
               "Install the desktop client.",
-              "Choose Individual.",
-              "Sign in to OpenLeash Cloud.",
+              "Choose personal OpenLeash Cloud or Individual Open Source.",
+              "Sign in for Cloud, or let the installer start local client-api and Postgres.",
               "Install hooks for the agents you use.",
               "Keep working. OpenLeash interrupts only the risky stuff."
             ]} />
@@ -336,11 +355,45 @@ export const pages: Record<string, DocPage> = {
           <Notice title="Tiny but important" text="Solo OpenLeash Cloud users never go to the dashboard. That surface is for organization admins and security teams." />
         </section>
         <section className="section">
-          <SectionTitle title="Individual Backend" text="Individual desktop installs use OpenLeash Cloud for policy, plugin settings, approvals, audit, and evaluation." />
+          <SectionTitle title="Choose The Individual Backend" text="Personal Cloud hosts account state and evaluation. Individual Open Source keeps the same backend concepts in local Postgres and requires your own LLM key." />
           <NextStepCards cards={[
             ["OpenLeash Cloud", "/getting-started/openleash-cloud", "Personal hosted account and sync, while still keeping solo users out of the dashboard."],
-            ["Desktop client", "/clients/desktop-client", "See how hooks reach the local relay before the relay forwards to the backend."]
+            ["Individual Open Source", "/getting-started/individual-open-source", "Run the public client-api and Postgres locally without cloud sign-in."]
           ]} />
+        </section>
+      </>
+    )
+  },
+  "getting-started/individual-open-source": {
+    slug: "getting-started/individual-open-source",
+    eyebrow: "Individual Open Source",
+    title: "The real OpenLeash backend, on your machine.",
+    description: "Individual Open Source runs desktop-client, the public client-api, and Postgres locally. It is not a standalone desktop-only mode.",
+    body: (
+      <>
+        <section className="section first split">
+          <div>
+            <JourneyStrip steps={["Check Docker", "Install", "Start backend", "Add BYOK key", "Leash agents"]} active={1} />
+            <SectionTitle title="Local Open-Source Path" text="No OpenLeash Cloud account, billing, or hosted evaluation is involved." />
+            <StepList steps={[
+              "Install and start Docker Desktop, OrbStack, or another supported Docker runtime.",
+              "Run the installer with --open-source.",
+              "Let it start the public client-api and Postgres with persistent volumes.",
+              "Enter your own supported LLM provider key.",
+              "Install hooks against the local client-api and manage plugins locally."
+            ]} />
+          </div>
+          <DesktopScreenshot />
+        </section>
+        <section className="section">
+          <SectionTitle title="Install" text="The release pins the backend image by version and immutable digest, runs migrations, seeds the single local account, and launches desktop." />
+          <InstallCommand command="curl -fsSL https://openleash.com/install.sh | sh -s -- --open-source" copyLabel="Copy" />
+        </section>
+        <section className="section">
+          <Notice title="Backend-backed, still local" text="Local state, plugin settings, approvals, outcomes, and audit live in local Postgres. The desktop helper may cache setup state, but it is not a second backend and does not replace Postgres with SQLite." />
+        </section>
+        <section className="section">
+          <SectionTitle title="Reachability" text="Hooks on this computer use the local client-api, usually http://127.0.0.1:9318. Cloud-run agents cannot reach loopback unless you deliberately expose the backend through a tunnel, VPN, LAN, or reachable URL." />
         </section>
       </>
     )
@@ -361,6 +414,7 @@ export const pages: Record<string, DocPage> = {
               "Open the dashboard as an admin or CISO.",
               "Connect your identity provider.",
               "Set action and secret protection policies.",
+              "Choose mandatory/default plugins, employee install freedom, and organization or per-agent settings.",
               "Deploy the desktop client to employees.",
               "Use audit logs when you need answers."
             ]} />
@@ -379,19 +433,19 @@ export const pages: Record<string, DocPage> = {
   },
   "getting-started/local-mode": {
     slug: "getting-started/local-mode",
-    eyebrow: "Desktop Backend",
-    title: "Desktop requires a backend.",
-    description: "OpenLeash no longer supports a fully local desktop product mode. The desktop app is a local relay for OpenLeash Cloud or Private Cloud.",
+    eyebrow: "Backend Required",
+    title: "Local means Individual Open Source.",
+    description: "OpenLeash supports a local open-source product mode only when desktop uses the real public client-api and Postgres. There is no standalone desktop-only backend.",
     body: (
       <>
         <section className="section first split">
           <div>
-            <JourneyStrip steps={["Install desktop", "Choose backend", "Sign in", "Install hooks", "Protected"]} active={1} />
-            <SectionTitle title="What Happens" text="The desktop client starts a local relay API and installs hooks. The relay forwards decisions to OpenLeash Cloud or Private Cloud." />
+            <JourneyStrip steps={["Install desktop", "Choose backend", "Connect", "Install hooks", "Protected"]} active={1} />
+            <SectionTitle title="What Happens" text="Choose one of three backend-backed modes. Hooks call the configured client-api directly; provider proxy traffic can pass through the desktop edge for local container-plugin execution." />
             <StepList steps={[
               "Install the desktop client.",
-              "Choose OpenLeash Cloud or Private Cloud.",
-              "Sign in or enroll with your organization.",
+              "Choose Individual Open Source, OpenLeash Cloud, or Private Cloud.",
+              "Start the local backend, sign in to personal Cloud, or enroll with your organization.",
               "Install agent hooks.",
               "Keep coding."
             ]} />
@@ -399,22 +453,25 @@ export const pages: Record<string, DocPage> = {
           <DesktopScreenshot />
         </section>
         <section className="section">
-          <SectionTitle title="Backend Required" text="Policy, evaluation, plugin settings, approvals, audit, and account state come from the backend." />
-          <CodeBlock>{`Hooks call:
-http://127.0.0.1:9317/v1/hooks/:agent/:event
+          <SectionTitle title="Backend Required" text="Policy, evaluation, plugin settings, approvals, audit, and account state come from client-api and Postgres in every mode." />
+          <CodeBlock>{`Individual Open Source hooks:
+http://127.0.0.1:9318/v1/hooks/:agent/:event
 
-Desktop relay forwards to:
-OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
+OpenLeash Cloud hooks:
+https://api.openleash.com/v1/hooks/:agent/:event
+
+Private Cloud hooks:
+https://openleash.company.example/v1/hooks/:agent/:event`}</CodeBlock>
         </section>
         <section className="section">
           <SectionTitle title="What This Means" text="The desktop may keep local cache/setup state, but it is not the source of truth." />
-          <Checklist items={["Backend is required", "Hooks still target 127.0.0.1 first", "Backend outages fail closed", "BYOK keys live in account/org settings", "CISO plugin settings flow from the dashboard"]} />
+          <Checklist items={["Backend and Postgres are required", "Hooks target the configured client-api directly", "Protected hooks fail closed when the backend is unavailable", "Individual Open Source stores BYOK locally", "Organization plugin policy flows from the dashboard"]} />
         </section>
         <section className="section">
           <SectionTitle title="Finish Line" text="You are done when the desktop client is running, hooks are installed, and the backend connection is healthy." />
           <NextStepCards cards={[
-            ["Understand the desktop client", "/clients/desktop-client", "See what the tray app owns and how hooks reach it."],
-            ["Troubleshooting", "/reference/troubleshooting", "Use this if hooks are not firing or the local API is not reachable."]
+            ["Individual Open Source", "/getting-started/individual-open-source", "Run the real local backend and Postgres."],
+            ["Understand the desktop client", "/clients/desktop-client", "See what the tray app, Island, proxy edge, and hook installer own."]
           ]} />
         </section>
       </>
@@ -449,6 +506,7 @@ OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
               "Create or join the organization.",
               "Connect identity and groups.",
               "Set policies and approval routes.",
+              "Set plugin requirements, configuration locks, and agent-specific profiles.",
               "Deploy desktop and mobile clients."
             ]} />
           </div>
@@ -496,7 +554,7 @@ OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
             <Mini title="Dashboard" text="Used by admins and CISOs for users, policy, audit, usage, and deployment." />
             <Mini title="Postgres" text="Customer-owned database. Run migrations before upgrades." />
             <Mini title="Identity sync" text="Google Workspace, Okta, Entra ID, Ping, or LDAP-style providers." />
-            <Mini title="Clients" text="Desktop still receives hooks locally first, then forwards to the customer API." />
+            <Mini title="Clients" text="Desktop and mobile use the customer API. Installed hooks target the customer-hosted client-api directly." />
           </div>
         </section>
         <section className="section">
@@ -509,20 +567,22 @@ OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
       </>
     )
   },
-  "clients/desktop-client": featurePage("Desktop Client", "The installed app that agents talk to first. It owns the tray, local relay API, hook installer, and backend enrollment.", <DesktopScreenshot />, [
-    ["Local API", "Hooks call 127.0.0.1:9317 first, even in managed deployments."],
+  "clients/desktop-client": featurePage("Desktop Client", "The installed tray app, approval surface, Island host, provider-proxy edge, hook installer, and backend enrollment client.", <DesktopScreenshot />, [
+    ["Managed hooks", "Installed hooks call the configured client-api directly: hosted, customer-hosted, or local Individual Open Source."],
     ["Hook installer", "Installs integrations for supported local agents."],
     ["Settings", "Stores desktop preferences and backend enrollment state."],
-    ["Forwarding", "OpenLeash Cloud and Private Cloud modes forward to the configured API."]
+    ["Island", "Renders approvals, session activity, completion notices, and typed plugin contributions without allowing plugin-owned UI."],
+    ["Provider edge", "Runs constrained local container plugins before relaying normalized enforcement to the configured backend."]
   ], "Client", "clients/desktop-client"),
   "clients/mobile-client": featurePage("Mobile Client", "The approval companion for people who need to decide away from the desk.", <MobileScreenshot />, [
     ["Approvals", "Review held actions from your phone."],
     ["Activity", "See the recent decisions that need your attention."],
     ["Private Cloud", "Point mobile at the customer API URL and sign in with company identity."]
   ], "Client", "clients/mobile-client"),
-  "clients/dashboard": featurePage("Dashboard for CISOs", "The admin surface for organizations. Individuals do not need it.", <DashboardScreenshot />, [
+  "clients/dashboard": featurePage("Dashboard for CISOs", "The admin surface for organizations. Solo users do not enter it.", <DashboardScreenshot />, [
     ["Identity", "Connect users, groups, roles, and devices."],
     ["Policy", "Set the rules employees inherit."],
+    ["Plugins", "Choose mandatory/default plugins, catalog freedom, locked or editable settings, and organization agent profiles."],
     ["Audit", "Answer who did what, when, and why."],
     ["Rollout", "Issue deployment tokens and track protected endpoints."]
   ], "Client", "clients/dashboard"),
@@ -564,20 +624,22 @@ OpenLeash Cloud or Private Cloud client-api`}</CodeBlock>
   "deployment/openleash-cloud": deploymentPage("OpenLeash Cloud", "Hosted by OpenLeash. Individuals stay simple; organizations use the dashboard.", `Individual:
 1. Install desktop or mobile.
 2. Sign in from that app.
-3. Install hooks and start protection.
+3. Choose plugins and global, agent-kind, or exact-agent settings.
+4. Install hooks and start protection.
 
 Organization:
 1. Admin signs in with work identity.
 2. Dashboard opens setup.
-3. Configure identity, roles, policies, approvals, and deployment tokens.
-4. Deploy desktop clients.
-5. Employees sign in and inherit dashboard-managed configuration.`, ["No customer infrastructure is required for the hosted path.", "Do not expose implementation service names or internal hostnames in customer-facing rollout instructions.", "Admins configure the organization from the dashboard; employees install or receive the desktop and mobile clients."]),
+3. Configure identity, roles, policies, approvals, plugins, and deployment tokens.
+4. For each plugin, choose mandatory/default state, install freedom, configuration locking, and organization agent profiles.
+5. Deploy desktop clients.
+6. Employees sign in, inherit required configuration, and receive only the plugin freedom the admin allows.`, ["No customer infrastructure is required for the hosted path.", "Do not expose implementation service names or internal hostnames in customer-facing rollout instructions.", "Admins configure the organization from the dashboard; employees install or receive the desktop and mobile clients."]),
   "deployment/private-cloud": deploymentPage("Private Cloud", "Customer-hosted rollout for organizations.", `Admin bootstrap:
 1. Open the customer-hosted dashboard.
 2. Enter the organization name.
 3. Save the API URL used by desktop and mobile.
 4. Connect identity.
-5. Configure policies, approvals, audit, usage, and updates.
+5. Configure policies, plugins, employee freedom, approvals, audit, usage, and updates.
 6. Create a deployment token.
 7. Deploy clients.
 
@@ -596,19 +658,26 @@ Dashboard setup:
 1. Configure identity.
 2. Sync users and groups.
 3. Assign roles.
-4. Configure policies and provider keys.
+4. Configure policies, plugin controls, agent profiles, and provider keys.
 5. Issue deployment tokens.
 6. Roll out clients.
 
 Client bootstrap:
 desktop: Organization -> Private Cloud -> your managed API URL -> sign in -> install hooks
 mobile:  Custom API URL -> sign in -> register device -> approve held actions`, ["Self-hosted is the operator-run form of Private Cloud, not a separate product mode.", "Document services, secrets, ingress, migration jobs, and backups.", "Desktop clients require the managed backend."]),
-  "reference/architecture": referencePage("Architecture", "The shortest useful map.", `Cloud and Private Cloud:
-agent hook -> desktop local API -> client-api -> policy/evaluation
-dashboard-web -> dashboard-api -> Postgres
+  "reference/architecture": referencePage("Architecture", "The shortest useful map.", `Individual Open Source:
+agent hook -> local client-api -> local Postgres
+provider request -> local proxy -> desktop edge -> plugin containers -> provider
+
+OpenLeash Cloud:
+agent hook -> hosted client-api -> hosted Postgres
+provider request -> local proxy -> desktop edge -> plugin containers -> hosted client-api -> provider
 
 Private Cloud:
-same public core, customer-hosted services`),
+agent hook -> customer client-api -> customer Postgres
+dashboard-web -> dashboard-api -> customer Postgres
+
+All modes use the same public client-api contracts and plugin model.`),
   "reference/plugins": {
     slug: "reference/plugins",
     eyebrow: "Reference",
@@ -618,10 +687,9 @@ same public core, customer-hosted services`),
       <>
         <section className="section first split">
           <div>
-            <SectionTitle title="Plain Model" text="Agents emit hooks. OpenLeash normalizes them into events. The runtime runs the enabled plugins for that event in manifest order." />
-            <CodeBlock>{`agent hook
-  -> desktop local relay
-  -> client-api
+            <SectionTitle title="Plain Model" text="Agents emit hooks or provider traffic. OpenLeash normalizes both into events. The runtime resolves the effective plugin state for the authenticated user and agent, then runs enabled plugins in manifest order." />
+            <CodeBlock>{`installed agent hook
+  -> configured client-api
   -> OpenLeash event
   -> ordered plugin pipeline
   -> audit, approval, transformed prompt, or allow/deny response`}</CodeBlock>
@@ -638,7 +706,7 @@ same public core, customer-hosted services`),
   runtime: "node",
   entrypoint: "src/index.ts",
   events: ["prompt.beforeSubmit"],
-  permissions: ["event:read", "prompt:read", "audit:write"],
+  permissions: ["event:read", "prompt:read", "audit:write", "island:publish"],
   effects: ["observe"],
   ordering: { priority: 250, after: ["openleash.dlp"] },
   configSchema: {
@@ -682,6 +750,36 @@ same public core, customer-hosted services`),
             <Mini icon={<ListChecks />} title="Events" text="Use the narrowest event: startup, agent detected, skill changed, prompt before submit, agent response, tool before/after use, session start/end." />
             <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, tool read, model invoke, storage, audit, log, signal, usage, decision, or notification." />
             <Mini icon={<Database />} title="Storage" text="Use plugin-scoped JSON storage. OpenLeash injects organization and plugin identity so plugins cannot read each other's state." />
+          </div>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="Publish To The Island" text="Plugins own logic and bounded wording; OpenLeash owns every pixel, interaction, accessibility rule, and scope check." />
+            <CodeBlock>{`await capabilities.island.annotateSession({
+  key: "destructive-risk",
+  label: "Destructive filesystem operation",
+  detail: "Recursive deletion affects this workspace.",
+  value: "critical",
+  tone: "danger",
+  ttlSeconds: 180,
+  action: {
+    id: "open",
+    label: "Open session",
+    type: "open-session"
+  }
+});
+
+await capabilities.island.reportActivity({
+  key: "test-suite",
+  title: "Test suite running",
+  status: "running",
+  progress: { current: 18, total: 24 }
+});`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<Bell />} title="Short-lived" text="Contributions expire after a bounded TTL and can be refreshed or cleared by plugin key." />
+            <Mini icon={<ShieldCheck />} title="Host rendered" text="No plugin HTML, CSS, JavaScript, URLs, shell commands, Electron IPC, or custom components." />
+            <Mini icon={<UsersRound />} title="Correctly scoped" text="Organization, user, session, agent kind, and exact enrolled agent identity come from trusted runtime context." />
           </div>
         </section>
         <section className="section split">
@@ -733,13 +831,33 @@ openleash.sensitive-access
   -> openleash.mcp-scanner`}</CodeBlock>
         </section>
         <section className="section">
-          <SectionTitle title="Settings And Rollout" text="Every plugin exposes settings through its manifest config schema. Solo users configure their own installed plugins. Organization admins choose installed plugins and defaults from the dashboard." />
+          <SectionTitle title="Settings And Rollout" text="Plugin authors define one config schema and consume one resolved input.config. OpenLeash owns product mode, organization roles, employee freedom, and agent-profile merging." />
           <Checklist items={[
-            "Preinstalled OpenLeash plugins ship with the client/backend bundle",
-            "Organizations can choose which plugins employees receive",
-            "Plugin defaults come from defaultConfig",
-            "Plugin UI controls come from configSchema",
+            "Individual Open Source and personal OpenLeash Cloud users control their own plugins and profiles",
+            "Organization admins independently choose mandatory state, default enablement, employee install permission, and configuration locking",
+            "Mandatory does not imply locked: an admin can require a plugin while allowing employee configuration",
+            "Profiles can target every agent, an agent kind such as Claude Code or Codex, an exact authenticated/enrolled runtime ID, or both",
+            "Caller-supplied agent IDs never become authorization scope",
             "Runtime capabilities provide primitive services while plugin code owns its detection logic"
+          ]} />
+          <CodeBlock>{`effective input.config:
+manifest defaultConfig
+  -> organization base settings
+  -> matching organization profiles by priority
+  -> user base settings when configuration is unlocked
+  -> matching user profiles by priority when unlocked
+
+mandatory plugin:
+  cannot be removed or disabled by an employee
+  can still accept employee configuration when configLocked is false`}</CodeBlock>
+        </section>
+        <section className="section">
+          <SectionTitle title="Product Modes" text="The same manifest, schema, profiles, and runtime contract travel across all supported products." />
+          <DecisionTable rows={[
+            ["Individual Open Source", "Local client-api + Postgres", "The individual owns installs and settings; cloud-only plugins are refused."],
+            ["Personal OpenLeash Cloud", "Hosted client-api", "The individual owns synchronized installs and settings without entering the org dashboard."],
+            ["Organization OpenLeash Cloud", "Hosted APIs + dashboard", "Admins set organization policy; employees get exactly the allowed install and configuration freedom."],
+            ["Private Cloud", "Customer-hosted APIs + dashboard", "The same organization controls run entirely on customer infrastructure."]
           ]} />
         </section>
         <section className="section">
@@ -808,8 +926,10 @@ dashboard-api:
 Rule:
 Desktop cache migrations must not become product authority; backend data lives in Postgres.`),
   "reference/troubleshooting": referencePage("Troubleshooting", "Start with the symptom, then the mode.", `Desktop hook not firing:
-- Check desktop app is running
-- Check local API on 127.0.0.1:9317
+- Inspect the installed agent hook and confirm its configured client-api URL
+- Check that client-api /health is reachable from the agent environment
+- For Individual Open Source, check http://127.0.0.1:9318/health
+- Check desktop is signed in/enrolled so approvals and activity can arrive
 - Reinstall hooks
 
 Cloud API unhealthy:
@@ -1079,10 +1199,10 @@ function DesktopScreenshot() {
     <div className="screenshot desktopShot">
       <div className="windowBar"><span /><span /><span /></div>
       <div className="shotTitle"><Laptop size={18} /> OpenLeash Desktop</div>
-      <div className="modeRow"><button>Individual</button><button className="active">OpenLeash Cloud</button></div>
+      <div className="modeRow"><button>Open Source</button><button className="active">Personal Cloud</button></div>
       <div className="field"><span>Backend</span><strong>api.openleash.com</strong></div>
       <div className="field"><span>Hooks</span><strong>Claude, Codex, Cursor, Gemini, OpenCode, OpenClaw, NanoClaw</strong></div>
-      <div className="status good"><Check size={15} /> Local relay connected to backend</div>
+      <div className="status good"><Check size={15} /> Cloud backend connected · local plugin edge ready</div>
     </div>
   );
 }
@@ -1092,9 +1212,9 @@ function RuntimeScreenshot() {
     <div className="screenshot diagramShot">
       <div className="node"><TerminalSquare size={18} /> Agent hook</div>
       <div className="line" />
-      <div className="node"><Laptop size={18} /> Desktop local API</div>
+      <div className="node"><Cloud size={18} /> Configured client-api</div>
       <div className="line" />
-      <div className="node"><Cloud size={18} /> Cloud or Private managed API</div>
+      <div className="node"><Database size={18} /> Plugin pipeline + Postgres</div>
     </div>
   );
 }
@@ -1108,8 +1228,8 @@ function PersonalCloudScreenshot() {
       <button><Download size={16} /> Download desktop client</button>
       <div className="smallRows">
         <span>No dashboard</span>
-        <span>Local API first</span>
-        <span>Cloud sync when online</span>
+        <span>Hosted backend</span>
+        <span>Synced plugin settings</span>
       </div>
     </div>
   );
@@ -1124,6 +1244,7 @@ function DashboardScreenshot() {
         <span>Users</span>
         <span>Identity</span>
         <span>Policies</span>
+        <span>Plugins</span>
       </div>
       <div className="dashMain">
         <div className="dashTop"><h3>Overview</h3><span>Acme Security</span></div>
