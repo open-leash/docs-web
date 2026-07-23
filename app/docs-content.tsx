@@ -828,15 +828,15 @@ await capabilities.usage.record({
         <section className="section">
           <SectionTitle title="Ordering" text="The runtime resolves before/after dependencies first, then priority. This keeps transformations and checks deterministic." />
           <CodeBlock>{`prompt.beforeSubmit:
-openleash.prompt-compression
-  -> openleash.dlp
-  -> openleash.sensitive-access
+token-saver
+  -> data-leakage-prevention
+  -> sensitive-access
 
 tool.beforeUse:
-openleash.sensitive-access
-  -> openleash.blast-radius
-  -> openleash.rules-enforcer
-  -> openleash.mcp-scanner`}</CodeBlock>
+sensitive-access
+  -> blast-radius
+  -> rules-enforcer
+  -> mcp-scanner`}</CodeBlock>
         </section>
         <section className="section">
           <SectionTitle title="Settings And Rollout" text="Plugin authors define one config schema and consume one resolved input.config. OpenLeash owns product mode, organization roles, employee freedom, and agent-profile merging." />
@@ -892,14 +892,14 @@ if (!previous) {
         <section className="section">
           <SectionTitle title="First-Party Plugins" text="These ship preinstalled today and also serve as reference implementations for plugin builders." />
           <DecisionTable rows={[
-            ["openleash.prompt-compression", "prompt.beforeSubmit", "Token-saver rewrites noisy prompts with its own prompt/schema and reports savings."],
-            ["openleash.dlp", "prompt.beforeSubmit", "Data-leakage-prevention owns masking/detection logic and emits secret detection signals."],
-            ["openleash.sensitive-access", "prompt, response, tool", "Catches env-file reads, secret exposure, env dumps, and exfiltration attempts."],
-            ["openleash.blast-radius", "tool.beforeUse", "Guards destructive tools and broad data operations."],
-            ["openleash.rules-enforcer", "prompt, agent.response, tool", "Evaluates natural-language rules with plugin-owned prompts and emits security findings."],
-            ["openleash.mcp-scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit, review, and dashboard correlation."],
-            ["openleash.skill-scanner", "startup, agent.detected, skill.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."],
-            ["openleash.siem-exporter", "security, log, outcome", "Exports events and plugin logs to configured SIEM targets."]
+            ["token-saver", "prompt.beforeSubmit", "token-saver rewrites noisy prompts with its own prompt/schema and reports savings."],
+            ["data-leakage-prevention", "prompt.beforeSubmit", "data-leakage-prevention owns masking/detection logic and emits secret detection signals."],
+            ["sensitive-access", "prompt, response, tool", "Catches env-file reads, secret exposure, env dumps, and exfiltration attempts."],
+            ["blast-radius", "tool.beforeUse", "Guards destructive tools and broad data operations."],
+            ["rules-enforcer", "prompt, agent.response, tool", "Evaluates natural-language rules with plugin-owned prompts and emits security findings."],
+            ["mcp-scanner", "tool.beforeUse and tool.afterUse", "Inventories MCP tool calls for audit, review, and dashboard correlation."],
+            ["skill-scanner", "startup, agent.detected, skill.detected, skill.changed", "Observes agent skills and emits signals for suspicious instructions."],
+            ["siem-exporter", "security, log, outcome", "Exports events and plugin logs to configured SIEM targets."]
           ]} />
         </section>
         <section className="section">
