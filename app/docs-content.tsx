@@ -18,6 +18,7 @@ import {
   ListChecks,
   LockKeyhole,
   MonitorDown,
+  RefreshCw,
   ScrollText,
   ShieldAlert,
   ShieldCheck,
@@ -62,6 +63,7 @@ export const navGroups: NavGroup[] = [
     title: "BUILDING PLUGINS",
     items: [
       { href: "/reference/plugins", label: "Your first plugin" },
+      { href: "/reference/plugin-containers", label: "Container runtime" },
       { href: "/reference/api", label: "Events reference" },
       { href: "/reference/api", label: "Capabilities API" },
       { href: "/reference/plugins", label: "Settings and Island UI" },
@@ -707,14 +709,13 @@ All modes use the same public client-api contracts and plugin model.`),
   entrypoint: "container",
   execution: {
     type: "container",
-    placement: "server",
+    placement: "either",
     protocol: "openleash-container-plugin.v1",
     image: "ghcr.io/acme/prompt-labeler:1.0.0",
-    digest: "sha256:<immutable-image-digest>",
     eventPath: "/v1/events"
   },
   events: ["prompt.beforeSubmit"],
-  permissions: ["event:read", "prompt:read", "audit:write", "island:publish"],
+  permissions: ["event:read", "prompt:read", "conversation:read", "audit:write", "island:publish"],
   effects: ["observe"],
   ordering: { priority: 250, after: ["openleash.dlp"] },
   configSchema: {
@@ -736,16 +737,13 @@ All modes use the same public client-api contracts and plugin model.`),
     return { status: "skipped", summary: "Disabled." };
   }
 
-  await capabilities.storage.set({
-    scope: { sessionId: input.event.sessionId },
-    key: "labels/latest",
-    value: { label: input.config.label, at: Date.now() },
-    ttlSeconds: 86400
+  const conversation = await capabilities.context.conversation.recent({
+    limit: 20
   });
 
   return {
     status: "passed",
-    summary: "Prompt labeled.",
+    summary: \`Reviewed \${conversation.turns.length} recent turns.\`,
     findings: [{
       title: "Prompt label",
       severity: "info",
@@ -756,8 +754,8 @@ All modes use the same public client-api contracts and plugin model.`),
           </div>
           <div className="featureStack">
             <Mini icon={<ListChecks />} title="Events" text="Use the narrowest event: startup, agent detected, skill changed, prompt before submit, agent response, tool before/after use, session start/end." />
-            <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, tool read, model invoke, storage, audit, log, signal, usage, decision, or notification." />
-            <Mini icon={<Database />} title="Storage" text="Use plugin-scoped JSON storage. OpenLeash injects organization and plugin identity so plugins cannot read each other's state." />
+            <Mini icon={<LockKeyhole />} title="Permissions" text="Declare only what the plugin needs: prompt read/write, conversation read, tool read, model invoke, storage, audit, log, signal, usage, decision, or notification." />
+            <Mini icon={<Database />} title="State" text="Use conversation context for history-aware decisions. Private databases under /data remain local to that runtime." />
           </div>
         </section>
         <section className="section split">
@@ -869,20 +867,19 @@ mandatory plugin:
           ]} />
         </section>
         <section className="section">
-          <SectionTitle title="Plugin Data" text="Plugins can keep private state without owning a database or raw SQL access. Use scoped storage for session memory, caches, heuristics, and notification dedupe." />
-          <CodeBlock>{`const scope = {
-  sessionId: input.event.sessionId,
-  conversationId: input.event.conversationId
-};
+          <SectionTitle title="History Before Storage" text="Use OpenLeash conversation context for history-aware decisions. Keep private container databases for runtime-local implementation state, indexes, analytics, and caches." />
+          <CodeBlock>{`// The host returns only the authenticated current session.
+const conversation = await capabilities.context.conversation.recent({
+  limit: 20
+});
 
+// Optional: a small plugin-owned value, not conversation history.
 const previous = await capabilities.storage.get({
-  scope,
   key: "notifications/customer-data-risk"
 });
 
 if (!previous) {
   await capabilities.storage.set({
-    scope,
     key: "notifications/customer-data-risk",
     value: { shownAt: Date.now() },
     ttlSeconds: 5 * 60 * 60
@@ -907,6 +904,205 @@ if (!previous) {
           <NextStepCards cards={[
             ["First-party plugin repos", "https://github.com/open-leash?q=plugin-", "Read the public plugin-* repositories, each with its own icon, source, manifest, prompts, and parser logic."],
             ["Client API source", "https://github.com/open-leash/client-api/tree/main/src/plugins", "See the runtime and first-party plugin integration."]
+          ]} />
+        </section>
+      </>
+    )
+  },
+  "reference/plugin-containers": {
+    slug: "reference/plugin-containers",
+    eyebrow: "Building plugins",
+    title: "Build a container plugin",
+    description: "From a tiny HTTP handler to a signed, isolated OCI image—with conversation context and optional private databases.",
+    body: (
+      <>
+        <section className="section first split">
+          <div>
+            <SectionTitle title="Your Five-Minute Loop" text="Start from the runnable example. One command validates it, builds the image, tests the real signed protocol, and leaves the image ready for the desktop." />
+            <CodeBlock>{`cd examples/container-plugin
+npm install
+npm run smoke
+
+# In Individual Open Source:
+Plugins → Add/reload local folder
+
+# Iterate:
+edit → check → image → reload folder → trigger event`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<ListChecks />} title="Check" text="Validates required manifest fields, container protocol settings, subscribed events, permissions, and JavaScript syntax." />
+            <Mini icon={<ShieldCheck />} title="Smoke test" text="Builds and starts the image with runtime restrictions, verifies health and HMAC signing, and round-trips conversation context." />
+            <Mini icon={<RefreshCw />} title="Reload" text="Rebuild the same local tag and choose the folder again. Desktop detects the new image and replaces the development container." />
+          </div>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="One Protocol, Any Language" text="OpenLeash pulls a digest-pinned OCI image and calls a small HTTP API. It never builds plugin source code while an agent request is waiting." />
+            <CodeBlock>{`OpenLeash event
+  -> authenticated runtime router
+  -> isolated plugin container
+  -> openleash-container-plugin.v1 response
+
+Required:
+GET  /healthz
+POST /v1/events
+
+Optional:
+POST /v1/transform
+POST /v1/tools/execute`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<ShieldCheck />} title="Correlated" text="Every response echoes the exact protocol and requestId. OpenLeash rejects mismatched or stale responses." />
+            <Mini icon={<KeyRound />} title="Signed" text="Validate the timestamp and HMAC signature before parsing or acting on an invocation." />
+            <Mini icon={<LockKeyhole />} title="Contained" text="Run non-root with a read-only root filesystem, explicit resources, network policy, and no Docker or Kubernetes socket." />
+          </div>
+        </section>
+        <section className="section">
+          <SectionTitle title="Minimal Dockerfile" text="The application listens on port 8080, writes only to /data or /tmp, and includes both an HTTP health endpoint and OCI health check." />
+          <CodeBlock>{`FROM node:22-alpine
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+COPY server.mjs ./
+
+RUN mkdir -p /data && chown -R node:node /app /data
+USER node
+
+ENV NODE_ENV=production
+ENV PORT=8080
+EXPOSE 8080
+VOLUME ["/data"]
+
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 \\
+  CMD node -e "fetch('http://127.0.0.1:8080/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+
+CMD ["node", "server.mjs"]`}</CodeBlock>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="Event API" text="The host supplies plugin identity, trusted tenant context, resolved settings, input, and results from requested host capabilities." />
+            <CodeBlock>{`POST /v1/events
+
+{
+  "protocol": "openleash-container-plugin.v1",
+  "requestId": "8fe6...",
+  "round": 0,
+  "plugin": {
+    "id": "acme.history-aware",
+    "version": "1.0.0"
+  },
+  "tenant": {
+    "organizationId": "trusted-context",
+    "userId": "trusted-context"
+  },
+  "event": "prompt.beforeSubmit",
+  "settings": {
+    "profileIds": [],
+    "configHash": "..."
+  },
+  "config": {},
+  "input": {},
+  "capabilityResults": {}
+}`}</CodeBlock>
+          </div>
+          <div>
+            <SectionTitle title="Completed Response" text="Return typed output only. Plugins do not call desktop UI, OpenLeash tables, or provider credentials directly." />
+            <CodeBlock>{`{
+  "protocol": "openleash-container-plugin.v1",
+  "requestId": "8fe6...",
+  "status": "completed",
+  "output": {
+    "status": "passed",
+    "summary": "Event processed.",
+    "findings": []
+  }
+}`}</CodeBlock>
+          </div>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="Ask For Conversation Context" text="Do not build a second conversation database. Request a bounded window from the authenticated current session." />
+            <CodeBlock>{`{
+  "protocol": "openleash-container-plugin.v1",
+  "requestId": "8fe6...",
+  "status": "capability_required",
+  "capabilityRequests": [{
+    "id": "context.conversation.recent:0",
+    "capability": "context.conversation.recent",
+    "request": { "limit": 20 }
+  }]
+}`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<ListChecks />} title="Useful by default" text="The normalized event already carries its transcript when the agent transport provides one." />
+            <Mini icon={<ShieldCheck />} title="Host scoped" text="The container cannot select another organization, user, or arbitrary session." />
+            <Mini icon={<Database />} title="Optional storage" text="Keep capabilities.storage for small plugin-owned values such as checkpoints or notification deduplication." />
+          </div>
+        </section>
+        <section className="section">
+          <SectionTitle title="Isolation Is The Data Boundary" text="A userId field does not make unreviewed shared code safe. OpenLeash chooses the workload boundary before the plugin receives traffic." />
+          <DecisionTable rows={[
+            ["shared-trusted", "Reviewed first-party/stateless worker", "Warm shared replicas; durable user data only through host-scoped capabilities."],
+            ["user-dedicated", "Community/private plugin or custom database", "One user + plugin + version workload, route, secrets, persistent volume, and database role."],
+            ["tenant-dedicated", "Organization-owned private plugin", "One organization-bound workload and storage boundary."],
+            ["customer-hosted", "Private Cloud", "The customer operates the workload, database, backups, and policy."]
+          ]} />
+          <p>A community image is never promoted to <code>shared-trusted</code> automatically. A user-dedicated image is built and published once by the developer. Enabling it creates its route, secret, persistent volume and running pod. Desktop login/presence prewarms it before agent traffic. An event normally only routes to a ready pod; starting from an event is a bounded recovery fallback.</p>
+          <p>When the user has no connected desktop and no plugin activity for an operator-defined grace period, the pod may stop while its volume remains. The next desktop presence starts it again. Users can choose always-warm operation when eliminating cold starts matters more than compute cost.</p>
+        </section>
+        <section className="section split">
+          <div>
+            <SectionTitle title="Bundled PostgreSQL Is Allowed" text="A user-dedicated plugin may run its application and private PostgreSQL as one stateful container appliance. The database is never shared or publicly exposed." />
+            <CodeBlock>{`# Entrypoint starts private PostgreSQL first.
+export PGDATA=/data/postgres
+initdb -D "$PGDATA" --username=plugin
+postgres -D "$PGDATA" -h 127.0.0.1 &
+
+# The app connects over loopback.
+export DATABASE_URL=postgresql://plugin@127.0.0.1/plugin
+exec node server.mjs
+
+# Manifest requirements:
+placement: "either"
+isolation: "user-dedicated"
+storage.persistent: true`}</CodeBlock>
+          </div>
+          <div className="featureStack">
+            <Mini icon={<Database />} title="Persistent and private" text="PGDATA lives under /data on one user/plugin-specific single-writer volume. Pod replacement or suspension does not delete it." />
+            <Mini icon={<ShieldCheck />} title="One replica" text="Bundled PostgreSQL is for user-dedicated stateful workloads only. It listens on loopback, runs non-root, and is never horizontally autoscaled." />
+            <Mini icon={<Cloud />} title="Cloud stays cloud" text="Cloud-agent events use the cloud runtime and its private volume." />
+            <Mini icon={<Laptop />} title="Local stays local" text="Local-agent events use the desktop runtime and its private volume. OpenLeash does not copy or merge database files." />
+          </div>
+        </section>
+        <section className="section">
+          <SectionTitle title="Execution Follows The Agent" text="Persistence does not make two databases synchronizable. Use conversation context for consistent history-aware behavior." />
+          <DecisionTable rows={[
+            ["edge", "Local agents", "Run locally; /data is private to that desktop runtime."],
+            ["server", "Cloud agents", "Run in cloud; /data is private to that cloud runtime."],
+            ["either", "Local and cloud agents", "Run where the event originates; use conversation context for shared history."]
+          ]} />
+        </section>
+        <section className="section">
+          <SectionTitle title="Publish Only After It Passes" text="Keep the digest out during local iteration. Pin the pushed digest before submitting the release so reviewed source cannot be replaced." />
+          <CodeBlock>{`npm install
+npm run smoke
+docker push ghcr.io/acme/history-aware:1.0.0
+docker inspect --format='{{index .RepoDigests 0}}' \\
+  ghcr.io/acme/history-aware:1.0.0`}</CodeBlock>
+          <Checklist items={[
+            "Publish a versioned OCI image and immutable digest",
+            "Declare only required events, effects, permissions, resources, placement, storage, timeout, and failure mode",
+            "Verify signature, timestamp, protocol, plugin identity, version, and requestId",
+            "Use conversation context—not a private database—as the default history source",
+            "Make writes idempotent because a signed request can be retried",
+            "Apply schema migrations before accepting traffic",
+            "Test SIGTERM shutdown, database reconnect, health failures, and container replacement",
+            "Never trust a caller-provided user id as the only database isolation mechanism"
+          ]} />
+          <NextStepCards cards={[
+            ["Runnable example", "https://github.com/open-leash/client-api/tree/main/examples/container-plugin", "Copy the manifest, history-aware Node server, Dockerfile, Compose file, and optional PostgreSQL setup."],
+            ["Plugin contract", "https://github.com/open-leash/client-api/tree/main/src/plugins", "Read the runtime types, capabilities, validation, and tests."]
           ]} />
         </section>
       </>
