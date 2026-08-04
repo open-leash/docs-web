@@ -470,7 +470,7 @@ https://openleash.company.example/v1/hooks/:agent/:event`}</CodeBlock>
           <Checklist items={["Backend and Postgres are required", "Hooks target the configured client-api directly", "Protected hooks fail closed when the backend is unavailable", "Individual Open Source stores BYOK locally", "Organization plugin policy flows from the dashboard"]} />
         </section>
         <section className="section">
-          <SectionTitle title="Finish Line" text="You are done when the desktop client is running, hooks are installed, and the backend connection is healthy." />
+          <SectionTitle title="Finish Line" text="You are done when the desktop client is running, hooks are installed, the backend is healthy, and every enabled plugin passes health plus signed protocol verification." />
           <NextStepCards cards={[
             ["Individual Open Source", "/getting-started/individual-open-source", "Run the real local backend and Postgres."],
             ["Understand the desktop client", "/clients/desktop-client", "See what the tray app, Island, proxy edge, and hook installer own."]
