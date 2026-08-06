@@ -18,15 +18,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: page.description,
     alternates: { canonical: `/${canonicalPath}` },
     openGraph: {
-      title: `${page.title} - OpenLeash Docs`,
+      title: `${page.title} - Leash Docs`,
       description: page.description,
       url: `/${canonicalPath}`,
       type: "article",
-      images: [{ url: docsOgImage, width: 512, height: 512, alt: "OpenLeash Docs" }]
+      images: [{ url: docsOgImage, width: 512, height: 512, alt: "Leash Docs" }]
     },
     twitter: {
       card: "summary_large_image",
-      title: `${page.title} - OpenLeash Docs`,
+      title: `${page.title} - Leash Docs`,
       description: page.description,
       images: [docsOgImage]
     }

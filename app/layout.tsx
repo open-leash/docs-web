@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(docsUrl),
   title: {
     default: docsTitle,
-    template: "%s - OpenLeash Docs"
+    template: "%s - Leash Docs"
   },
   description: docsDescription,
   alternates: { canonical: "/" },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: docsUrl,
     siteName: docsTitle,
     type: "website",
-    images: [{ url: docsOgImage, width: 512, height: 512, alt: "OpenLeash Docs" }]
+    images: [{ url: docsOgImage, width: 512, height: 512, alt: "Leash Docs" }]
   },
   twitter: {
     card: "summary_large_image",

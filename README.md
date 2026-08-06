@@ -16,16 +16,16 @@
 
 ## ✨ What this app is
 
-`docs-web` is the public documentation site for OpenLeash.
+`docs-web` is the public documentation site for Leash.
 
-It explains how to install, run, self-host, integrate, and reason about OpenLeash across Individual Open Source, personal and organization OpenLeash Cloud, and Private Cloud.
+It explains how to install, run, self-host, integrate, and reason about Leash across Individual Open Source, personal and organization Leash Cloud, and Private Cloud.
 
 ---
 
 ## 🧭 What belongs here
 
 - Installation guides
-- Individual Open Source, OpenLeash Cloud, and Private Cloud explanations
+- Individual Open Source, Leash Cloud, and Private Cloud explanations
 - API contracts
 - Plugin architecture, manifests, organization/user/agent settings resolution, Island contributions, capabilities, and examples
 - Agent hook support notes

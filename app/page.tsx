@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description: docsDescription,
     url: "/",
     type: "website",
-    images: [{ url: docsOgImage, width: 512, height: 512, alt: "OpenLeash Docs" }]
+    images: [{ url: docsOgImage, width: 512, height: 512, alt: "Leash Docs" }]
   },
   twitter: {
     card: "summary_large_image",
