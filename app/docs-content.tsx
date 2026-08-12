@@ -39,7 +39,7 @@ export const navGroups: NavGroup[] = [
 function MarketingNav() {
   return (
     <header className="marketingNav sticky">
-      <a href={mainSiteUrl} className="marketingBrand"><span className="marketingBrandIcon">🐾</span><span>Leash</span></a>
+      <a href={mainSiteUrl} className="marketingBrand"><img className="marketingBrandIcon" src="/openleash-icon.png" alt="" /><span>Leash</span></a>
       <nav className="marketingLinks">
         <a href={`${mainSiteUrl}/features`}>🧩 Features</a>
         <a className="active" href="/">📚 Docs</a>
@@ -59,7 +59,7 @@ export function DocsLayout({ activePath, children }: { activePath: string; child
     ))}</section>
   ))}</nav>;
   return <><MarketingNav /><main className="docsShell"><aside className="side"><div className="sideInner">
-    <a className="brand" href="/"><span className="mark">🐾</span><span><strong>Leash</strong><em>Docs</em></span></a>{renderNav()}
+    <a className="brand" href="/"><img className="mark" src="/openleash-icon.png" alt="" /><span><strong>Leash</strong><em>Docs</em></span></a>{renderNav()}
   </div><div className="sidePanel"><p>Source and releases</p><a href={githubUrl}><Github size={15} /> Leash on GitHub</a></div></aside>
   <section className="content">{children}</section></main></>;
 }
@@ -82,8 +82,7 @@ const FeatureList = () => <ul className="checkList">
     "Data Leakage Prevention masks secrets",
     "Rules Enforcer imports rules from agent instruction files",
     "MCP, Skill, and Code scanners surface concrete risk",
-    "Token Saver compresses repetitive context",
-    "SIEM Exporter sends normalized outcomes to your endpoint"
+    "Token Saver compresses repetitive context"
   ].map((item) => <li key={item}><Check size={16} /> {item}</li>)}
 </ul>;
 
@@ -91,8 +90,8 @@ export const pages: Record<string, DocPage> = {
   "getting-started": {
     slug: "getting-started", title: "Quickstart", eyebrow: "GETTING STARTED",
     description: "Install Leash and protect your first personal AI coding agent.",
-    body: <><p>Install the desktop client, choose Leash Cloud or Personal Open Source, select the agents to monitor, and enable the built-in Features you want.</p>
-      <h2>Recommended path</h2><ol><li>Download Leash for macOS or Windows.</li><li>Choose your personal backend.</li><li>Select Codex, Claude Code, or another supported agent.</li><li>Review the built-in Features and finish setup.</li><li>Run a harmless test prompt and confirm it appears in the island and History.</li></ol></>
+    body: <><p>Install the desktop client, choose Leash Cloud or Personal Open Source, select the agents to monitor, choose whether to use the Island, and enable the built-in Features you want.</p>
+      <h2>Recommended path</h2><ol><li>Download Leash for macOS or Windows.</li><li>Choose your personal backend.</li><li>Select Codex, Claude Code, or another supported agent.</li><li>Review the Island screenshot and choose Island or tray-only mode.</li><li>Review the built-in Features and finish setup.</li><li>Run a harmless test prompt and confirm it appears in History and, when enabled, the Island.</li></ol></>
   },
   "getting-started/personal-open-source": {
     slug: "getting-started/personal-open-source", title: "Personal Open Source", eyebrow: "LOCAL BACKEND",
@@ -115,7 +114,7 @@ export const pages: Record<string, DocPage> = {
   },
   "clients/desktop-client": {
     slug: "clients/desktop-client", title: "Desktop client", eyebrow: "THE COCKPIT", description: "Monitor agents, answer approvals, and configure Features.",
-    body: <><p>The desktop island shows active agents and questions requiring your attention. History records decisions and Feature outcomes. Settings controls agent monitoring, notification sounds, updates, and personal backend configuration.</p><p>The “open agent” action targets the existing editor window and project whenever the agent exposes enough session context.</p></>
+    body: <><p>Setup shows a real Island preview and asks whether to enable it. The tray is always installed; tray-only mode opens the desktop window instead of presenting the Island. History records decisions and Feature outcomes. Settings can change Island visibility later.</p><p>The “open agent” action targets the existing editor window and project whenever the agent exposes enough session context.</p></>
   },
   "features": {
     slug: "features", title: "Built-in Features", eyebrow: "FIRST PARTY", description: "The reviewed capabilities included with Leash.", body: <><p>Features are built and released by the Leash team. There is no public marketplace, uploader, publisher profile, rating, or download counter.</p><FeatureList /></>

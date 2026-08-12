@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: docsUrl,
     siteName: docsTitle,
     type: "website",
-    images: [{ url: docsOgImage, width: 512, height: 512, alt: "Leash Docs" }]
+    images: [{ url: docsOgImage, width: 1024, height: 1024, alt: "Leash Docs" }]
   },
   twitter: {
     card: "summary_large_image",
@@ -29,7 +29,9 @@ export const metadata: Metadata = {
     follow: true
   },
   icons: {
-    icon: "/favicon.png"
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/openleash-icon.png"
   }
 };
 

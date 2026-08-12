@@ -793,11 +793,11 @@ body {
 }
 
 .marketingBrandIcon {
-  display: inline-grid;
-  place-items: center;
-  width: auto;
-  height: auto;
-  font-size: 22px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .marketingLinks {
