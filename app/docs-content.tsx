@@ -23,7 +23,7 @@ export const navGroups: NavGroup[] = [
     title: "FEATURES",
     items: [
       { href: "/features", label: "Built-in Features" },
-      { href: "/features/rules-enforcer", label: "Rules Enforcer" },
+      { href: "/features/rules-enforcer", label: "Leash Rules Protection" },
       { href: "/features/authoring", label: "Maintainer authoring" }
     ]
   },
@@ -77,11 +77,11 @@ export function HomePage() {
 
 const FeatureList = () => <ul className="checkList">
   {[
-    "Blast Radius blocks destructive actions",
+    "Leash Destructive Protection blocks destructive actions",
     "Sensitive Access asks before credential reads",
-    "Data Leakage Prevention masks secrets",
-    "Rules Enforcer imports rules from agent instruction files",
-    "MCP, Skill, and Code scanners surface concrete risk",
+    "Leash Private Data Protection masks secrets",
+    "Leash Rules Protection imports rules from agent instruction files",
+    "Leash Tool Protection, Leash Prompt Injection Protection, and Leash Code Protection surface concrete risk",
     "Token Saver compresses repetitive context"
   ].map((item) => <li key={item}><Check size={16} /> {item}</li>)}
 </ul>;
@@ -120,8 +120,8 @@ export const pages: Record<string, DocPage> = {
     slug: "features", title: "Built-in Features", eyebrow: "FIRST PARTY", description: "The reviewed capabilities included with Leash.", body: <><p>Features are built and released by the Leash team. There is no public marketplace, uploader, publisher profile, rating, or download counter.</p><FeatureList /></>
   },
   "features/rules-enforcer": {
-    slug: "features/rules-enforcer", title: "Rules Enforcer", eyebrow: "PROJECT INSTRUCTIONS", description: "Discover and enforce the rules already used by your agents.",
-    body: <><p>Rules Enforcer starts empty. Leash scans the supported instruction files for your selected agents, presents candidate rules, and lets you choose which ones to enforce.</p><p>Imported rules can ask you before continuing or block immediately. They remain editable in Feature settings.</p></>
+    slug: "features/rules-enforcer", title: "Leash Rules Protection", eyebrow: "PROJECT INSTRUCTIONS", description: "Discover and enforce the rules already used by your agents.",
+    body: <><p>Leash Rules Protection starts empty. Leash scans the supported instruction files for your selected agents, presents candidate rules, and lets you choose which ones to enforce.</p><p>Imported rules can ask you before continuing or block immediately. They remain editable in Feature settings.</p></>
   },
   "features/authoring": {
     slug: "features/authoring", title: "Maintainer Feature authoring", eyebrow: "LEASH CONTRIBUTORS", description: "Add a reviewed first-party Feature to client-api.",
