@@ -10,10 +10,7 @@ const repoRoot = fs.existsSync(path.join(monorepoRoot, "apps", "docs-web")) ? mo
 const nextConfig = {
   output: "standalone",
   outputFileTracingRoot: repoRoot,
-  typedRoutes: true,
-  experimental: {
-    devtoolSegmentExplorer: false
-  }
+  typedRoutes: true
 };
 
 export default nextConfig;

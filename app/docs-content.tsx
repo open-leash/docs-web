@@ -3,7 +3,7 @@ import { ArrowRight, Check, Cloud, Github, Laptop, ShieldCheck, TerminalSquare }
 import { docsDescription, docsTitle } from "./seo";
 
 const mainSiteUrl = (process.env.NEXT_PUBLIC_MAIN_SITE_URL ?? "https://openleash.com").replace(/\/+$/, "");
-const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/open-leash";
+const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/open-leash/leash";
 
 type NavGroup = { title: string; items: Array<{ href: string; label: string }> };
 export type DocPage = { slug: string; title: string; eyebrow: string; description: string; body: ReactNode };
@@ -16,7 +16,7 @@ export const navGroups: NavGroup[] = [
       { href: "/getting-started", label: "Quickstart" },
       { href: "/getting-started/personal-open-source", label: "Personal Open Source" },
       { href: "/getting-started/leash-cloud", label: "Leash Cloud" },
-      { href: "/clients/desktop-client", label: "Desktop client" }
+      { href: "/clients/desktop-client", label: "Leash Desktop" }
     ]
   },
   {
@@ -70,7 +70,7 @@ export function HomePage() {
     <div className="heroActions"><a className="primary" href="/getting-started">Get started <ArrowRight size={16} /></a><a href={`${mainSiteUrl}/features`}>Explore Features</a></div>
     <div className="pathGrid">
       <a className="pathCard" href="/getting-started/leash-cloud"><Cloud /><span>HOSTED</span><h2>Leash Cloud</h2><p>A personal hosted account with no dashboard or organization setup.</p></a>
-      <a className="pathCard" href="/getting-started/personal-open-source"><TerminalSquare /><span>OPEN SOURCE</span><h2>Personal Open Source</h2><p>The real client API and Postgres on your computer, with your own model key.</p></a>
+      <a className="pathCard" href="/getting-started/personal-open-source"><TerminalSquare /><span>OPEN SOURCE</span><h2>Personal Open Source</h2><p>Leash Engine and Postgres on your computer, with your own model key.</p></a>
     </div>
   </article></DocsLayout>;
 }
@@ -95,8 +95,8 @@ export const pages: Record<string, DocPage> = {
   },
   "getting-started/personal-open-source": {
     slug: "getting-started/personal-open-source", title: "Personal Open Source", eyebrow: "LOCAL BACKEND",
-    description: "Run Leash client-api and Postgres locally for one person.",
-    body: <><p>This mode has no Leash Cloud sign-in. Docker is used for Postgres and the client API; Features themselves run directly inside the Node.js client API and do not use containers.</p>
+    description: "Run Leash Engine and Postgres locally for one person.",
+    body: <><p>This mode has no Leash Cloud sign-in. Docker is used for Postgres and Engine; Features themselves run directly inside the Node.js Engine process and do not use containers.</p>
       <pre><code>python3 run.py --mode individual-open-source --clean-slate --yes</code></pre>
       <p>Provide your own model provider key when a Feature needs evaluation. Desktop updates still use the public Leash update feed.</p></>
   },
@@ -113,7 +113,7 @@ export const pages: Record<string, DocPage> = {
     slug: "getting-started/leash-cloud", title: "Leash Cloud", eyebrow: "MOVED", description: "Personal hosted Leash.", body: <p>Leash Cloud is now called Leash Cloud.</p>
   },
   "clients/desktop-client": {
-    slug: "clients/desktop-client", title: "Desktop client", eyebrow: "THE COCKPIT", description: "Monitor agents, answer approvals, and configure Features.",
+    slug: "clients/desktop-client", title: "Leash Desktop", eyebrow: "THE COCKPIT", description: "Monitor agents, answer approvals, and configure Features.",
     body: <><p>Setup shows a real Island preview and asks whether to enable it. The tray is always installed; tray-only mode opens the desktop window instead of presenting the Island. History records decisions and Feature outcomes. Settings can change Island visibility later.</p><p>The “open agent” action targets the existing editor window and project whenever the agent exposes enough session context.</p></>
   },
   "features": {
@@ -124,19 +124,19 @@ export const pages: Record<string, DocPage> = {
     body: <><p>Rules Protection starts empty. Leash finds suggested rules in your project, shows them in normal language, and lets you choose the ones that matter to you.</p><p>Each rule can ask you before AI continues or stop the action automatically. You can change these choices at any time.</p></>
   },
   "features/authoring": {
-    slug: "features/authoring", title: "Maintainer Feature authoring", eyebrow: "LEASH CONTRIBUTORS", description: "Add a reviewed first-party Feature to client-api.",
-    body: <><p>Feature authoring is an internal maintainer workflow, not a public publishing surface. Add the TypeScript implementation under <code>apps/client-api/src/plugins</code>, register its handler in <code>feature-runtime.ts</code>, and add its manifest to the shared first-party catalog.</p>
+    slug: "features/authoring", title: "Maintainer Feature authoring", eyebrow: "LEASH CONTRIBUTORS", description: "Add a reviewed first-party Feature to Leash Engine.",
+    body: <><p>Feature authoring is an internal maintainer workflow, not a public publishing surface. Add the TypeScript implementation under <code>apps/engine/src/plugins</code>, register its handler in <code>feature-runtime.ts</code>, and add its manifest to the shared first-party catalog.</p>
       <p>Every Feature must declare events, permissions, configuration schema, and failure mode. Add unit tests for allow, ask, block, failure, audit, and UI-visible outcomes as applicable.</p><pre><code>{`export async function runMyFeature(event, config, capabilities) {
   return { decision: "allow", outcomes: [] };
 }`}</code></pre></>
   },
   "reference/events": {
     slug: "reference/events", title: "Events and hooks", eyebrow: "REFERENCE", description: "Stable compatibility contracts used by Leash clients and agents.",
-    body: <><p>Existing <code>/v1/plugins</code>, manifest IDs, <code>openleash.*</code> identifiers, and environment variables remain stable compatibility contracts. Product UI calls the bundled implementations Features.</p><p>Installed hooks send normalized agent events to the configured client API. The API executes enabled Features in process and returns allow, ask, deny, or modified input.</p></>
+    body: <><p>Existing <code>/v1/plugins</code>, manifest IDs, <code>openleash.*</code> identifiers, and environment variables remain stable compatibility contracts. Product UI calls the bundled implementations Features.</p><p>Installed hooks send normalized agent events to the configured Engine API. Engine executes enabled Features in process and returns allow, ask, deny, or modified input.</p></>
   },
   "reference/troubleshooting": {
     slug: "reference/troubleshooting", title: "Troubleshooting", eyebrow: "REFERENCE", description: "Check hooks, proxy connectivity, Feature health, and updates.",
-    body: <><h2>Agent says Reconnecting</h2><p>Confirm the local proxy is healthy and that the configured provider endpoint is reachable. Hook visibility alone does not prove the proxy transport is healthy.</p><h2>Feature health</h2><pre><code>curl -H "Authorization: Bearer $OPENLEASH_TOKEN" http://127.0.0.1:9318/v1/plugin-runtime/verify</code></pre><h2>Personal Open Source</h2><p>Start Docker, rerun the personal mode, and check that Postgres and client-api pass their health checks.</p></>
+    body: <><h2>Agent says Reconnecting</h2><p>Confirm the local proxy is healthy and that the configured provider endpoint is reachable. Hook visibility alone does not prove the proxy transport is healthy.</p><h2>Feature health</h2><pre><code>curl -H "Authorization: Bearer $OPENLEASH_TOKEN" http://127.0.0.1:9318/v1/plugin-runtime/verify</code></pre><h2>Personal Open Source</h2><p>Start Docker, rerun the personal mode, and check that Postgres and Leash Engine pass their health checks.</p></>
   }
 };
 

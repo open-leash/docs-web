@@ -16,21 +16,20 @@
 
 ## ✨ What this app is
 
-`docs-web` is the public documentation site for Leash.
+`docs-web` is the public documentation site for Leash. It stays in a separate repository so documentation can deploy independently from the [Leash public runtime monorepo](https://github.com/open-leash/leash).
 
-It explains how to install, run, self-host, integrate, and reason about Leash across Individual Open Source, personal and organization Leash Cloud, and Private Cloud.
+It explains how to install, run, self-host, integrate, and reason about Personal Open Source and the public Personal and Business offers. Private organization administration and Cloud implementation details are documented in private operational repositories.
 
 ---
 
 ## 🧭 What belongs here
 
 - Installation guides
-- Individual Open Source, Leash Cloud, and Private Cloud explanations
+- Personal Open Source and Leash Cloud explanations
 - API contracts
-- Plugin architecture, manifests, organization/user/agent settings resolution, Island contributions, capabilities, and examples
+- Built-in Feature architecture, manifests, Island contributions, capabilities, and examples
 - Agent hook support notes
 - Mobile setup
-- Identity provider setup
 - Architecture and open-source boundary docs
 - Migration and release workflow guidance
 - Community contribution docs
@@ -41,7 +40,7 @@ It explains how to install, run, self-host, integrate, and reason about Leash ac
 
 ```bash
 npm install
-npm run dev:docs-web
+npm run dev
 ```
 
 Open:
