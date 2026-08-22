@@ -16,7 +16,8 @@ export const navGroups: NavGroup[] = [
       { href: "/getting-started", label: "Quickstart" },
       { href: "/getting-started/personal-open-source", label: "Personal Open Source" },
       { href: "/getting-started/leash-cloud", label: "Leash Cloud" },
-      { href: "/clients/desktop-client", label: "Leash Desktop" }
+      { href: "/clients/desktop-client", label: "Leash Desktop" },
+      { href: "/getting-started/local-development", label: "Local development" }
     ]
   },
   {
@@ -31,6 +32,7 @@ export const navGroups: NavGroup[] = [
     title: "REFERENCE",
     items: [
       { href: "/reference/events", label: "Events and hooks" },
+      { href: "/reference/architecture", label: "Architecture and repos" },
       { href: "/reference/troubleshooting", label: "Troubleshooting" }
     ]
   }
@@ -69,7 +71,7 @@ export function HomePage() {
     <span className="eyebrow">PERSONAL AGENT CONTROL</span><h1>{docsTitle}</h1><p className="lead">{docsDescription}</p>
     <div className="heroActions"><a className="primary" href="/getting-started">Get started <ArrowRight size={16} /></a><a href={`${mainSiteUrl}/features`}>Explore Features</a></div>
     <div className="pathGrid">
-      <a className="pathCard" href="/getting-started/leash-cloud"><Cloud /><span>HOSTED</span><h2>Leash Cloud</h2><p>A personal hosted account with no dashboard or organization setup.</p></a>
+      <a className="pathCard" href="/getting-started/leash-cloud"><Cloud /><span>HOSTED</span><h2>Leash Cloud</h2><p>A personal hosted account with Leash AI and the same per-user view across devices.</p></a>
       <a className="pathCard" href="/getting-started/personal-open-source"><TerminalSquare /><span>OPEN SOURCE</span><h2>Personal Open Source</h2><p>Leash Engine and Postgres on your computer, with your own model key.</p></a>
     </div>
   </article></DocsLayout>;
@@ -78,8 +80,8 @@ export function HomePage() {
 const FeatureList = () => <ul className="checkList">
   {[
     "Destructive Protection stops AI before it damages your files, database, or project",
-    "Sensitive Access asks before credential reads",
-    "Private Data Protection masks secrets",
+    "Secret Protection asks before credential reads",
+    "Private Data Protection stops accidental sharing",
     "Rules Protection uses the project boundaries you choose",
     "Tool Protection, Prompt Injection Protection, and Code Protection explain what needs your attention",
     "Token Saver compresses repetitive context"
@@ -90,13 +92,13 @@ export const pages: Record<string, DocPage> = {
   "getting-started": {
     slug: "getting-started", title: "Quickstart", eyebrow: "GETTING STARTED",
     description: "Install Leash and protect your first personal AI coding agent.",
-    body: <><p>Install the desktop client, choose Leash Cloud or Personal Open Source, select the agents to monitor, choose whether to use the Island, and enable the built-in Features you want.</p>
+    body: <><p>Install Desktop, choose Leash Cloud or Personal Open Source, select the agents to monitor, choose whether to use the Island, and review the built-in Features that start on automatically.</p>
       <h2>Recommended path</h2><ol><li>Download Leash for macOS or Windows.</li><li>Choose your personal backend.</li><li>Select Codex, Claude Code, or another supported agent.</li><li>Review the Island screenshot and choose Island or tray-only mode.</li><li>Review the built-in Features and finish setup.</li><li>Run a harmless test prompt and confirm it appears in History and, when enabled, the Island.</li></ol></>
   },
   "getting-started/personal-open-source": {
     slug: "getting-started/personal-open-source", title: "Personal Open Source", eyebrow: "LOCAL BACKEND",
     description: "Run Leash Engine and Postgres locally for one person.",
-    body: <><p>This mode has no Leash Cloud sign-in. Docker is used for Postgres and Engine; Features themselves run directly inside the Node.js Engine process and do not use containers.</p>
+    body: <><p>This mode has no Leash Cloud sign-in. Docker supplies Postgres; Engine runs as the local Node.js service. Features execute directly inside Engine and do not use containers.</p>
       <pre><code>python3 run.py --mode individual-open-source --clean-slate --yes</code></pre>
       <p>Provide your own model provider key when a Feature needs evaluation. Desktop updates still use the public Leash update feed.</p></>
   },
@@ -107,14 +109,21 @@ export const pages: Record<string, DocPage> = {
   "getting-started/leash-cloud": {
     slug: "getting-started/leash-cloud", title: "Leash Cloud", eyebrow: "HOSTED PERSONAL",
     description: "Use Leash with a personal hosted account.",
-    body: <><p>Create your account in the desktop, mobile, or web client. Personal users remain in those clients; there is no public admin dashboard.</p><p>Choose managed evaluation or BYOK, enroll the desktop, select agents, and configure Features.</p></>
+    body: <><p>Create your account in Desktop, Mobile, or the personal web surface. Leash AI is included, the 10-day trial needs no card, and Cloud never asks for your model-provider key.</p><p>Enroll Desktop, select agents, review the protections that start on automatically, and configure the settings you want. Organization administration is not part of the public runtime.</p></>
   },
   "getting-started/openleash-cloud": {
     slug: "getting-started/leash-cloud", title: "Leash Cloud", eyebrow: "MOVED", description: "Personal hosted Leash.", body: <p>Leash Cloud is now called Leash Cloud.</p>
   },
   "clients/desktop-client": {
     slug: "clients/desktop-client", title: "Leash Desktop", eyebrow: "THE COCKPIT", description: "Monitor agents, answer approvals, and configure Features.",
-    body: <><p>Setup shows a real Island preview and asks whether to enable it. The tray is always installed; tray-only mode opens the desktop window instead of presenting the Island. History records decisions and Feature outcomes. Settings can change Island visibility later.</p><p>The “open agent” action targets the existing editor window and project whenever the agent exposes enough session context.</p></>
+    body: <><p>Setup shows a real Island preview and asks whether to enable it. The tray is always installed; tray-only mode opens the Desktop window instead of presenting the Island. History records decisions and Feature outcomes. Settings can change Island visibility later.</p><p>Overview begins with this device, its platform artwork, online state, and relative last-sync time. Agent enablement and per-agent history live on Agents. Feature details use Summary, History, and Settings.</p><p>Desktop and the personal web surface use the same per-user view model. A Business administrator still sees only their own user surface locally; organization administration stays web-only.</p><p>The “open agent” action targets the existing editor window and project whenever the agent exposes enough session context.</p></>
+  },
+  "getting-started/local-development": {
+    slug: "getting-started/local-development", title: "Local development", eyebrow: "RUN THE REAL STACK", description: "Choose the right local runtime and clean it up completely.",
+    body: <><p>Run <code>./run.py</code> at the root of the Leash monorepo. Option 1 starts Personal Open Source. Option 2 starts hosted-personal Cloud development. Option 3 rebuilds the packaged macOS app. Option 4 rebuilds the packaged app against local Cloud services. Choose C to remove local apps, services, hooks, proxy configuration, containers, databases, launch jobs, and client state.</p><pre><code>{`./run.py
+python3 run.py --mode individual-open-source --clean-slate --yes
+python3 run.py --mode local-cloud-release --real-oauth --yes
+python3 run.py --clean --yes`}</code></pre><p>The private website checkout is required for Cloud development. Business dashboard and identity administration are separate private services, not part of the public runner.</p></>
   },
   "features": {
     slug: "features", title: "Built-in Features", eyebrow: "FIRST PARTY", description: "The reviewed capabilities included with Leash.", body: <><p>Features are built and released by the Leash team. There is no public marketplace, uploader, publisher profile, rating, or download counter.</p><FeatureList /></>
@@ -134,6 +143,10 @@ export const pages: Record<string, DocPage> = {
     slug: "reference/events", title: "Events and hooks", eyebrow: "REFERENCE", description: "Stable compatibility contracts used by Leash clients and agents.",
     body: <><p>Existing <code>/v1/plugins</code>, manifest IDs, <code>openleash.*</code> identifiers, and environment variables remain stable compatibility contracts. Product UI calls the bundled implementations Features.</p><p>Installed hooks send normalized agent events to the configured Engine API. Engine executes enabled Features in process and returns allow, ask, deny, or modified input.</p></>
   },
+  "reference/architecture": {
+    slug: "reference/architecture", title: "Architecture and repositories", eyebrow: "ONE PUBLIC RUNTIME", description: "What was consolidated, what stays separate, and why.",
+    body: <><p>The public Engine, Desktop, Mobile, native proxy, provider sync worker, flow viewer, and shared contracts are developed together in <code>open-leash/leash</code>. Their source paths are <code>apps/engine</code>, <code>apps/desktop</code>, <code>apps/mobile</code>, <code>apps/local-proxy</code>, <code>apps/provider-sync-worker</code>, <code>apps/flow-viewer</code>, and <code>packages/shared</code>.</p><p>The npm and API identifiers that still say <code>client-api</code> or <code>desktop-client</code> are compatibility contracts. New source and product language says Engine and Desktop.</p><p>This docs site remains a separate public repository. The marketing website and Cloud control-plane services remain separate private repositories. Private services may pin a tested public-core commit; public code never imports private organization, dashboard, identity, billing, or cost administration.</p><p>The provider sync worker schedules retrospective agent activity. It is not the Business cost collector and is not an identity-provider sync service.</p></>
+  },
   "reference/troubleshooting": {
     slug: "reference/troubleshooting", title: "Troubleshooting", eyebrow: "REFERENCE", description: "Check hooks, proxy connectivity, Feature health, and updates.",
     body: <><h2>Agent says Reconnecting</h2><p>Confirm the local proxy is healthy and that the configured provider endpoint is reachable. Hook visibility alone does not prove the proxy transport is healthy.</p><h2>Feature health</h2><pre><code>curl -H "Authorization: Bearer $OPENLEASH_TOKEN" http://127.0.0.1:9318/v1/plugin-runtime/verify</code></pre><h2>Personal Open Source</h2><p>Start Docker, rerun the personal mode, and check that Postgres and Leash Engine pass their health checks.</p></>
@@ -142,6 +155,6 @@ export const pages: Record<string, DocPage> = {
 
 export function RenderDocPage({ page, activePath }: { page: DocPage; activePath: string }) {
   return <DocsLayout activePath={activePath}><article className="docArticle"><span className="eyebrow">{page.eyebrow}</span><h1>{page.title}</h1><p className="lead">{page.description}</p>{page.body}
-    <div className="nextCard"><ShieldCheck /><span><strong>Leash is personal-first</strong><small>Every public flow is designed for one developer and their agents.</small></span></div>
+    <div className="nextCard"><ShieldCheck /><span><strong>One public personal runtime</strong><small>Business Cloud wraps it privately without moving organization administration into public clients.</small></span></div>
   </article></DocsLayout>;
 }
