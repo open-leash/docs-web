@@ -20,6 +20,11 @@
 
 It explains how to install, run, self-host, integrate, and reason about Personal Open Source and the public Personal and Business offers. Private organization administration and Cloud implementation details are documented in private operational repositories.
 
+The public Engine, Desktop, Mobile, native proxy, provider sync worker, flow
+viewer, and shared contracts now live together in
+[`open-leash/leash`](https://github.com/open-leash/leash). This documentation
+repository stays separate so the manual can deploy independently.
+
 ---
 
 ## 🧭 What belongs here
@@ -33,6 +38,10 @@ It explains how to install, run, self-host, integrate, and reason about Personal
 - Architecture and open-source boundary docs
 - Migration and release workflow guidance
 - Community contribution docs
+
+Product language uses **Leash Engine**, **Desktop**, **Mobile**, and
+**Features**. Old `client-api`, `desktop-client`, `plugins`, and `openleash.*`
+names appear only where they document stable compatibility contracts.
 
 ---
 
