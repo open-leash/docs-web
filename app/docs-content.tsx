@@ -141,7 +141,7 @@ python3 run.py --clean --yes`}</code></pre><p>The private website checkout is re
   },
   "reference/events": {
     slug: "reference/events", title: "Events and hooks", eyebrow: "REFERENCE", description: "Stable compatibility contracts used by Leash clients and agents.",
-    body: <><p>Existing <code>/v1/plugins</code>, manifest IDs, <code>openleash.*</code> identifiers, and environment variables remain stable compatibility contracts. Product UI calls the bundled implementations Features.</p><p>Installed hooks send normalized agent events to the configured Engine API. Engine executes enabled Features in process and returns allow, ask, deny, or modified input.</p></>
+    body: <><p>Existing <code>/v1/plugins</code>, manifest IDs, <code>openleash.*</code> identifiers, and environment variables remain stable compatibility contracts. Product UI calls the bundled implementations Features.</p><p>Installed hooks send normalized agent events to the configured Engine API. Engine executes enabled Features in process and returns a surface-specific allow, ask, or deny decision. Input replacement is shown only for an agent and event after conformance verification.</p></>
   },
   "reference/architecture": {
     slug: "reference/architecture", title: "Architecture and repositories", eyebrow: "ONE PUBLIC RUNTIME", description: "What was consolidated, what stays separate, and why.",
